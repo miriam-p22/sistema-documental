@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, shell } = require("electron");
 const path = require("path");
 const url = require("url");
 
@@ -9,16 +9,18 @@ async function createWindow() {
   const { default: isDev } = await import("electron-is-dev");
 
   mainWindow = new BrowserWindow({
-    // ... tu configuración de BrowserWindow
-    width: 950,
-    height: 600,
+    width: 1200,
+    height: 800,
+    maximizable: false, //desactiva el boton de maximizar
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       // ...
-      //preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "preload.js"),
     },
   });
+
+  // mainWindow.maximize(); //por defaul tla ventana estará maximizada
 
   const startUrl = isDev
     ? "http://localhost:3000" // Modo Desarrollo: carga el servidor de React
@@ -30,10 +32,31 @@ async function createWindow() {
 
   mainWindow.loadURL(startUrl);
 
-  // Abrir DevTools solo en desarrollo para debugging
-  if (isDev) {
-    //mainWindow.webContents.openDevTools();
-  }
+  // if (isDev) {
+  //   mainWindow.webContents.openDevTools(); //Esto se utiliza solo para relizar pruebas con el depurador
+  // }
+
+  // 1. Interceptar solicitudes para abrir nuevas ventanas (target="_blank")
+  mainWindow.webContents.on("new-window", (event, url) => {
+    event.preventDefault(); // Detiene la creación de la nueva ventana
+
+    // Si la URL es de tu aplicación (localhost o archivo), cárgala en la ventana actual
+    if (url.startsWith("http://localhost") || url.startsWith("file://")) {
+      mainWindow.loadURL(url);
+    } else {
+      // Si es una URL externa, ábrela en el navegador por defecto del sistema
+      shell.openExternal(url);
+    }
+  });
+
+  // 2. Interceptar redirecciones y navegación (para URLs externas)
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    // Si la URL NO es de tu aplicación (React Dev Server o archivo local)
+    if (!url.startsWith("http://localhost") && !url.startsWith("file://")) {
+      event.preventDefault(); // Detiene la navegación
+      shell.openExternal(url); // Abre la URL en el navegador del sistema
+    }
+  });
 
   mainWindow.on("closed", function () {
     mainWindow = null;
