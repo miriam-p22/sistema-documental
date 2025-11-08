@@ -1,0 +1,142 @@
+/* =========================================================
+ * BARRA SUPERIOR (NAVBAR)
+ * =========================================================
+*/
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    flex-shrink: 0; 
+}
+
+/* Grupo izquierda (ícono menú + buscador) */
+.header-left-group {
+    display: flex;
+    align-items: center;
+}
+
+/* Íconos (menu, campana, usuario, etc.) */
+.icon-control-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    cursor: pointer;
+    margin: 0 5px;
+    vertical-align: middle;
+}
+
+/* Usuario */
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-name {
+    margin-right: 15px;
+    color: #333;
+}
+
+/* ============================
+   NOTIFICACIONES (BADGE ROJO)
+   ============================ */
+
+.notification-dropdown-container {
+    position: relative;
+    cursor: pointer;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    left: 16px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 0px 4px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    box-shadow: 0 0 0 2px #fff;
+    z-index: 1001;
+    display: none;
+}
+
+.notification-badge[data-count]:not([data-count="0"]) {
+    display: block;
+}
+
+/* Dropdowns de usuario y notificaciones */
+.notification-dropdown-container,
+.profile-info-container {
+    position: relative;
+    cursor: pointer;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* Menú desplegable */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    padding: 10px 0;
+}
+
+.dropdown-menu.visible {
+    display: block;
+    opacity: 1;
+}
+
+.dropdown-title {
+    font-weight: bold;
+    color: #444;
+    padding: 5px 15px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+    white-space: normal;
+}
+
+.dropdown-item:hover {
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+.dropdown-item.view-all {
+    text-align: center;
+    font-weight: bold;
+    color: #007bff;
+    border-top: 1px solid #eee;
+    margin-top: 5px;
+}
+
+a {
+    text-decoration: none !important;
+}
