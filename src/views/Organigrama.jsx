@@ -1,136 +1,116 @@
-import React, { useState } from "react";
-import Layout from "../components/Layout";
-import CardReutilizable from "../components/CardReutilizable";
-import TablaReutilizable from "../components/TablaReutilizable";
-import BotonReutilizable from "../components/BotonReutilizable";
-import ModalReutilizable from "../components/ModalReutilizable";
-import CampoFormulario from "../components/CampoFormulario";
+import React, { Component } from 'react';
+import BotonReutilizable from '../components/BotonReutilizable';
+import FiltroBusqueda from '../components/FiltroBusqueda';
+import TablaReutilizable from '../components/TablaReutilizable';
+import ModalReutilizable from '../components/ModalReutilizable';
 
-const Organigrama = () => {
-  const [modalCrear, setModalCrear] = useState(false);
-  const [modalAutorizar, setModalAutorizar] = useState(false);
-  const [modalInsertar, setModalInsertar] = useState(false);
-  const [modalVer, setModalVer] = useState(false);
-  const [vista, setVista] = useState("principal");
-  const [organigramas] = useState([]);
-  const [areas] = useState([]);
+class Organigrama extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      organigramas: [],
+      searchTerm: '',
+      isModalCrearOpen: false,
+      isModalAutorizarOpen: false,
+      isModalVerOpen: false,
+      organigramaActual: {},
+    };
+  }
 
-  // Columnas para la tabla 
-  const columnasOrganigrama = [
-    "Título del organigrama",
-    "Fecha de autorización",
-    "Fecha de caducidad",
-    "Acciones",
-  ];
+  handleSearchChange = (e) => this.setState({ searchTerm: e.target.value });
 
-  const columnasAreas = ["Área", "Nivel", "Área superior"];
+  openModal = (modalName, org = {}) => {
+    this.setState({ [modalName]: true, organigramaActual: org });
+  };
 
-  return (
-    <Layout>
-      {/* Vista principal */}
-      {vista === "principal" && (
-        <CardReutilizable title="Organigrama">
-          <div className="acciones">
-            <BotonReutilizable onClick={() => setModalCrear(true)}>
-              Crear
-            </BotonReutilizable>
+  closeModal = (modalName) => {
+    this.setState({ [modalName]: false });
+  };
+
+  render() {
+    const { organigramas, searchTerm, isModalCrearOpen, isModalAutorizarOpen, isModalVerOpen } = this.state;
+    const filtered = organigramas.filter((o) =>
+      o.titulo?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const columns = ['Título del Organigrama', 'Fecha de Solicitud', 'Fecha de Autorización', 'Acciones'];
+
+    return (
+      <div className="main-content-wrapper">
+        <main className="content-area">
+          <section className="content-section">
+            <div className="table-container">
+              <h2 className="card-title">Organigrama</h2>
+
+              <div className="management-buttons-container">
+                <BotonReutilizable onClick={() => this.openModal('isModalCrearOpen')}>
+                  Crear Organigrama
+                </BotonReutilizable>
+              </div>
+
+              <TablaReutilizable
+                columns={columns}
+                data={filtered}
+                renderActions={(org) => (
+                  <>
+                    <button
+                      className="btn-action edit"
+                      onClick={() => this.openModal('isModalAutorizarOpen', org)}
+                    >
+                      Autorizar
+                    </button>
+                    <button
+                      className="btn-action btn-blue"
+                      onClick={() => this.openModal('isModalVerOpen', org)}
+                    >
+                      Ver
+                    </button>
+                  </>
+                )}
+              />
+            </div>
+          </section>
+        </main>
+
+        {/* MODALES */}
+        <ModalReutilizable
+          id="modalCrearOrganigrama"
+          title="Nueva versión de organigrama"
+          isOpen={isModalCrearOpen}
+          onClose={() => this.closeModal('isModalCrearOpen')}
+          onAccept={() => this.closeModal('isModalCrearOpen')}
+          acceptButtonText="Crear"
+        >
+          <label className="field">
+            <span>Título del organigrama</span>
+            <input className="input" type="text" placeholder="Ej. Organigrama 2025–2028" />
+          </label>
+        </ModalReutilizable>
+
+        <ModalReutilizable
+          id="modalAutorizarOrganigrama"
+          title="Autorizar organigrama"
+          isOpen={isModalAutorizarOpen}
+          onClose={() => this.closeModal('isModalAutorizarOpen')}
+          onAccept={() => this.closeModal('isModalAutorizarOpen')}
+          acceptButtonText="Solicitar"
+        >
+          <p>¿Desea solicitar la autorización del organigrama actual?</p>
+        </ModalReutilizable>
+
+        <ModalReutilizable
+          id="modalVerOrganigrama"
+          title="Organigrama autorizado"
+          isOpen={isModalVerOpen}
+          onClose={() => this.closeModal('isModalVerOpen')}
+        >
+          <div id="contenedorOrganigrama" style={{ minHeight: '300px' }}>
+            <p>Vista del organigrama autorizado aquí.</p>
           </div>
-
-          <div style={{ overflowX: "auto", background: "#fff", padding: "10px", borderRadius: "8px" }}>
-            <TablaReutilizable columns={columnasOrganigrama} data={organigramas} />
-          </div>
-
-          <ModalReutilizable
-            id="modalCrearOrganigrama"
-            title="Nueva versión de organigrama"
-            isOpen={modalCrear}
-            onClose={() => setModalCrear(false)}
-            onAccept={() => setModalCrear(false)}
-            acceptButtonText="Crear"
-          >
-            <CampoFormulario
-              label="Título del organigrama"
-              placeholder="Ej. Organigrama 2025–2028"
-              required
-            />
-          </ModalReutilizable>
-        </CardReutilizable>
-      )}
-
-      {/* Vista añadir areas */}
-      {vista === "gestion" && (
-        <CardReutilizable title="Gestión Organizacional">
-          <div className="acciones">
-            <BotonReutilizable onClick={() => setModalInsertar(true)}>
-              Agregar áreas
-            </BotonReutilizable>
-            <BotonReutilizable onClick={() => setModalAutorizar(true)}>
-              Autorizar
-            </BotonReutilizable>
-            <BotonReutilizable className="ghost" onClick={() => setVista("principal")}>
-              Regresar
-            </BotonReutilizable>
-          </div>
-
-          {/* Tabla Reutilizable (sin datos) */}
-          <div style={{ overflowX: "auto", background: "#fff", padding: "10px", borderRadius: "8px" }}>
-            <TablaReutilizable columns={columnasAreas} data={areas} />
-          </div>
-        </CardReutilizable>
-      )}
-
-      {/* Modal Autorizar */}
-      <ModalReutilizable
-        id="modalAutorizarOrganigrama"
-        title="Autorizar organigrama"
-        isOpen={modalAutorizar}
-        onClose={() => setModalAutorizar(false)}
-        onAccept={() => setModalAutorizar(false)}
-        acceptButtonText="Solicitar"
-      >
-        <p>¿Desea solicitar la autorización del organigrama actual?</p>
-      </ModalReutilizable>
-
-      {/* Modal Insertar Área */}
-      <ModalReutilizable
-        id="modalInsertarArea"
-        title="Agregar área"
-        isOpen={modalInsertar}
-        onClose={() => setModalInsertar(false)}
-        onAccept={() => setModalInsertar(false)}
-        acceptButtonText="Agregar"
-      >
-        <div className="grid two">
-          <CampoFormulario label="Nombre del área" placeholder="Ej. Secretaría Técnica" />
-          <CampoFormulario label="Nivel" isSelect>
-            <option value="">Selecciona...</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </CampoFormulario>
-          <CampoFormulario label="Área superior" isSelect>
-            <option value="Presidencia Municipal">Presidencia Municipal</option>
-            <option value="Secretaría Técnica">Secretaría Técnica</option>
-          </CampoFormulario>
-        </div>
-      </ModalReutilizable>
-
-      {/* Modal Ver Organigrama */}
-      <ModalReutilizable
-        id="modalVerOrganigrama"
-        title="Organigrama autorizado"
-        isOpen={modalVer}
-        onClose={() => setModalVer(false)}
-        onAccept={() => setModalVer(false)}
-        acceptButtonText="Cerrar"
-      >
-        <div className="organigrama-contenedor">
-          <p>Aquí se mostrará la estructura del organigrama autorizado.</p>
-        </div>
-      </ModalReutilizable>
-    </Layout>
-  );
-};
+        </ModalReutilizable>
+      </div>
+    );
+  }
+}
 
 export default Organigrama;
