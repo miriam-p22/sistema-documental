@@ -1,0 +1,40 @@
+/* ------------------------------------------------------------------- */
+/* Estilos para BadgeEstatus.jsx (Clases: .status-badge, .status-active, .status-inactive) */
+/* Colores: Verde para activo y ROJO para inactivo. */
+/* TAMAÑO UNIFORME y CUADROS REDONDEADOS (forma de píldora). */
+/* ------------------------------------------------------------------- */
+
+.status-badge {
+    /* Estilos para asegurar un TAMAÑO UNIFORME */
+    display: inline-flex;
+    justify-content: center; /* Centrar el texto horizontalmente */
+    align-items: center;
+    min-width: 85px; /* ANCHO FIJO: Asegura que 'Activo' e 'Inactivo' ocupen el mismo espacio */
+    height: 28px;
+    
+    /* Estilos visuales base */
+    padding: 4px 10px; 
+    border-radius: 9999px; /* ¡IMPORTANTE! Cuadros completamente redondeados (forma de píldora) */
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    box-sizing: border-box;
+    white-space: nowrap; /* Evita saltos de línea */
+    transition: all 0.2s ease; /* Transición suave para interacción */
+}
+
+/* Indicador de estado ACTIVO (Verde - Success) */
+.status-active {
+    color: #1e7e34; /* Texto verde oscuro */
+    background-color: #d4edda; /* Fondo verde muy claro */
+    border: 1px solid #c3e6cb;
+}
+
+/* Indicador de estado INACTIVO (Rojo - Danger) */
+.status-inactive {
+    color: #721c24; /* Texto rojo oscuro */
+    background-color: #f8d7da; /* Fondo rojo/rosa muy claro */
+    border: 1px solid #f5c6cb;
+}

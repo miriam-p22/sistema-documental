@@ -1,0 +1,108 @@
+/* Contenedor general de la tabla */
+.table-container {
+    height: 460px;         /* Altura visible del card */
+    overflow: hidden;         /* Oculta scroll exterior */
+    border-radius: 8px;
+    background-color: white;
+    margin-top: 10px;
+     padding: 25px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* La tabla completa */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+thead th {
+    text-align: center;
+}
+
+/* Encabezados fijos */
+thead {
+    background-color: #f1f1f1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+/* Scroll SOLO para el contenido */
+tbody {
+    display: block;
+    max-height: 250px;    /* Ajusta según tu diseño */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Mantener ancho fijo de columnas */
+thead tr, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+tbody td {
+    text-align: center;
+}
+
+/* Estilos de celdas */
+th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+    justify-content: center; 
+    
+}
+
+/* Hover */
+tbody tr:hover {
+    background-color: #f8f8f8;
+}
+
+/* --- Definición de Anchos de Columna para Evitar Amontonamiento --- */
+
+/* Nombre */
+th:nth-child(1), td:nth-child(1) {
+    width: 15%;
+    text-align: left; /* Generalmente los nombres se ven mejor a la izquierda */
+}
+
+/* Num. Trabajador */
+th:nth-child(2), td:nth-child(2) {
+    width: 90px;
+    min-width: 90px;
+}
+
+/* Correo Electrónico */
+th:nth-child(3), td:nth-child(3) {
+    width: 25%;
+    /* Asegura que el texto largo se corte si es necesario */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+/* Usuario */
+th:nth-child(4), td:nth-child(4) {
+    width: 15%;
+}
+
+/* Adscripción */
+th:nth-child(5), td:nth-child(5) {
+    width: 15%;
+    text-align: left;
+}
+
+/* Estatus */
+th:nth-child(6), td:nth-child(6) {
+    width: 110px;
+    min-width: 110px;
+}
+
+/* Acciones (Columna donde están los botones) */
+th:nth-child(7), td:nth-child(7) {
+    width: 130px; 
+    min-width: 130px; /* Crucial para que los botones quepan apilados */
+    padding: 8px 5px; /* Reducir padding horizontal aquí */
+}
+
