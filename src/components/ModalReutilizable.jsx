@@ -11,7 +11,7 @@ const ModalReutilizable = ({ id, title, children, formId, isOpen, onClose, onAcc
       <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby={`${id}-title`}>
         <header className="modal-head">
           <h3 id={`${id}-title`}>{title}</h3>
-          <button className="icon-btn close-red" onClick={onClose} aria-label="Cerrar">X</button>
+          <button className="icon-btn close-red" onClick={onClose} aria-label="Cerrar">x</button>
         </header>
 
         <div className="modal-body">
