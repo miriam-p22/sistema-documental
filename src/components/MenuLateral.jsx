@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../styles/BarraLateral.css";
+import "../styles/MenuLateral.css";
 
 function Sidebar({ collapsed }) {
   return (

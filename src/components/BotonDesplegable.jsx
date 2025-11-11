@@ -1,4 +1,3 @@
-// src/components/BotonDesplegable.jsx
 import React, { useState } from 'react';
 import { FaChevronDown } from "react-icons/fa";
 import '../styles/BotonDesplegable.css';
@@ -6,11 +5,22 @@ import '../styles/BotonDesplegable.css';
 const BotonDesplegable = ({ title = "Opciones", options = [] }) => {
   const [open, setOpen] = useState(false);
 
+  const handleToggleClick = (e) => {
+    e.stopPropagation(); 
+    setOpen(!open);
+  };
+  
+  const handleOptionClick = (e, opt) => {
+    e.stopPropagation(); 
+    setOpen(false);
+    opt.onClick(e); 
+  }
+
   return (
     <div className="dropdown-action">
       <button
         className="dropdown-toggle-status"
-        onClick={() => setOpen(!open)}
+        onClick={handleToggleClick}
       >
         {title} <FaChevronDown />
       </button>
@@ -20,11 +30,9 @@ const BotonDesplegable = ({ title = "Opciones", options = [] }) => {
           {options.map((opt, index) => (
             <button
               key={index}
-              className="btn-action status-action"
-              onClick={() => {
-                setOpen(false);
-                opt.onClick();
-              }}
+             
+              className={`btn-action status-action ${opt.statusClass || ''}`} 
+              onClick={(e) => handleOptionClick(e, opt)}
             >
               {opt.label}
             </button>

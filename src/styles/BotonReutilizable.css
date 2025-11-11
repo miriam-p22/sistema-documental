@@ -66,7 +66,7 @@
 /* Botón Otorgar Privilegios */
 .btn-privileges {
     /* Estilo base, similar a btn-add-user para mantener la consistencia en padding */
-    padding: 8px 15px;
+    padding: 5px 10px;
     border: none;
     font-weight: bold;
     cursor: pointer;
@@ -76,13 +76,11 @@
     align-items: center;
     transition: background-color 0.3s;
 
-    /* Color distinto para la acción de privilegios */
-    background-color: #5A8F7B; 
-    color: white;
+ 
 }
 
 .btn-privileges:hover {
-    background-color: #4c7b69; /* Oscurecer al pasar el ratón */
+    background-color: #12a0cc;
 }
 
 .btn-privileges i {
@@ -123,99 +121,12 @@
     background-color: #12a0cc;
 }
 
-/* Color: Activo (Verde) */
-.btn-action.status-active {
-    background-color: #28a745;
-    margin-right: 0;
-}
-
-.btn-action.status-active:hover {
-    background-color: #1e7e34;
-}
-
-/* Color: Inactivo (Rojo) */
-.btn-action.status-inactive {
-    background-color: #dc3545;
-    margin-right: 0;
-}
-
-.btn-action.status-inactive:hover {
-    background-color: #bd2130;
-}
-
-/* Estilos para el Dropdown de Estado dentro de la tabla */
-.dropdown-action {
-    position: relative;
-    display: inline-block;
-    margin-left: 0px;
-}
-
-.dropdown-toggle-status {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    font-size: 12px;
-    cursor: pointer;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    transition: background-color 0.3s;
-}
-
-.dropdown-toggle-status:hover {
-    background-color: #5a6268;
-}
-
-.dropdown-toggle-status i {
-    margin-left: 5px;
-    font-size: 10px;
-    margin-right: 0;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #ffffff;
-    min-width: 120px;
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-    border-radius: 4px;
-    overflow: hidden;
-    right: 0;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-}
-
-.dropdown-content button {
-    padding: 8px 10px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    text-align: left;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    color: white;
-    border-radius: 0;
-    margin-right: 0;
-}
-
-.dropdown-content button i {
-    margin-right: 8px;
-}
-
-/* Regla para mostrar el dropdown al hacer click (necesaria para el JS) */
-.dropdown-content.show {
-    display: block;
-}
 
 .management-buttons-container {
     /* Agrega un margen en la parte inferior para separarlo del campo de búsqueda */
-    margin-bottom: 10px; /* Puedes ajustar este valor (ej: 10px, 20px) */
+    margin-bottom: 10px; 
     
-    /* Opcional: Asegura que los botones se muestren en línea */
+    /* los botones se muestran en línea */
     display: flex;
     gap: 10px; 
 }

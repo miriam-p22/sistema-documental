@@ -1,21 +1,33 @@
-// src/components/FilaUsuario.jsx
 import React from 'react';
 import EtiquetaEstado from './EtiquetaEstado';
 import BotonReutilizable from './BotonReutilizable';
+import BotonDesplegable from './BotonDesplegable';
 
-const FilaUsuario = ({ user, onEdit, onStatusChange }) => {
-  // Manejo del dropdown de estado (simulación de lógica de apertura/cierre)
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+const FilaUsuario = ({ user, onEdit, onStatusChange, onRowClick, isSelected }) => { 
   
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-  
-  const handleStatusClick = (newStatus) => {
-    onStatusChange(user.id, newStatus);
-    setIsDropdownOpen(false); // Cierra el dropdown después de la acción
+  const handleEditClick = (e) => {
+    e.stopPropagation(); 
+    onEdit(user);
   };
+  
+  const statusOptions = [
+    { 
+        label: (<span><i className="fas fa-check-circle"></i> Activo</span>), 
+        onClick: () => onStatusChange(user.id, 'Activo'),
+        statusClass: 'status-active' //Clase para el color verde
+    },
+    { 
+        label: (<span><i className="fas fa-times-circle"></i> Inactivo</span>), 
+        onClick: () => onStatusChange(user.id, 'Inactivo'),
+        statusClass: 'status-inactive' // Clase para el color rojo
+    },
+  ];
 
   return (
-    <tr>
+    <tr
+      className={isSelected ? 'selected-user' : ''}
+      onClick={() => onRowClick(user.id)}
+    >
       <td>{user.nombre}</td>
       <td className="center-content">{user.numTrabajador}</td>
       <td className="center-content">{user.correo}</td>
@@ -27,35 +39,18 @@ const FilaUsuario = ({ user, onEdit, onStatusChange }) => {
       <td className="actions-cell">
         <div className="actions-cell-content">
           <BotonReutilizable 
-            className="edit" 
+            className="btn-action edit" 
             title="Editar Usuario" 
-            onClick={() => onEdit(user)}
+            onClick={handleEditClick} 
           >
             Editar 
           </BotonReutilizable>
           
-          <div className="dropdown-action">
-            <button className="dropdown-toggle-status" title="Cambiar Estado" onClick={toggleDropdown}>
-              Estado <i className="fas fa-chevron-down"></i>
-            </button>
-            
-            {/* Contenido del Dropdown de Estado Reutilizable */}
-            <div className="dropdown-content" style={{ display: isDropdownOpen ? 'block' : 'none' }}>
-              <button 
-                className="btn-action status-action status-active" 
-                onClick={() => handleStatusClick('Activo')}
-              >
-                <i className="fas fa-check-circle"></i> Activo
-              </button>
-              <button 
-                className="btn-action status-action status-inactive" 
-                onClick={() => handleStatusClick('Inactivo')}
-              >
-                <i className="fas fa-times-circle"></i> Inactivo
-              </button>
-              {/* Se pueden añadir otros estados aquí */}
-            </div>
-          </div>
+          <BotonDesplegable 
+            title="Estado"
+            options={statusOptions}
+          />
+          
         </div>
       </td>
     </tr>

@@ -152,7 +152,7 @@ a {
 .sidebar.collapsed {
     width: 80px; /* Ancho reducido fijo para solo mostrar íconos */
     /* Transicion al expandir */
-    transition: width 0.25s ease, background 0.25s ease;
+    transition: width 0.25s ease, 0.25s ease;
 }
 
 /* 2. Ocultar todos los elementos de texto */
