@@ -1,6 +1,6 @@
 import React, { Component } from 'react'; // Importar Component
 import BotonReutilizable from '../components/BotonReutilizable';
-import FiltroBusqueda from '../components/FiltroBusqueda';  
+import FiltroBusqueda from '../components/FiltroBusqueda'; 
 import TablaReutilizable from '../components/TablaReutilizable';
 import ModalReutilizable from '../components/ModalReutilizable';
 import FormularioUsuario from '../components/FormularioUsuario';
@@ -33,8 +33,7 @@ class Usuarios extends Component {
         };
         
     }
-    
-    // Métodos de la Clase (reemplazan a los 'handlers' del componente funcional)
+
 
     // Handlers de modales y estado
     openAddModal = () => {
@@ -133,7 +132,7 @@ class Usuarios extends Component {
 
                             {/* BOTONES */}
                             <div className="management-buttons-container">
-                                {/* Usar el método de clase */}
+                                
                                 <BotonReutilizable onClick={this.openAddModal}>
                                     Agregar Usuario
                                 </BotonReutilizable>

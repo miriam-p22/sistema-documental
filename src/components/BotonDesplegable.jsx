@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaChevronDown } from "react-icons/fa";
+//import { FaChevronDown } from "react-icons/fa";
 import '../styles/BotonDesplegable.css';
 
 const BotonDesplegable = ({ title = "Opciones", options = [] }) => {
