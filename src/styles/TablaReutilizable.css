@@ -1,46 +1,43 @@
-/* La tabla completa */
+.tabla-wrapper {
+    max-height: 280px;
+    overflow-y: auto;        /* SOLO scroll vertical */
+    overflow-x: hidden;      /* NO scroll horizontal */
+    width: 100%;
+}
+
+/* Tabla */
 table {
     width: 100%;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
+    table-layout: fixed;     /* evita desbordes horizontales */
 }
+
+/* Encabezados */
 thead th {
     text-align: center;
+    white-space: normal !important;
+    word-break: break-word;
+    background-color: #f1f1f1;
 }
 
-/* Encabezados fijos */
+/* Encabezado fijo */
 thead {
-    background-color: #f1f1f1;
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 5;
 }
 
-/* Scroll SOLO para el contenido */
 tbody {
-    display: block;
-    max-height: 250px;    
-    overflow-y: auto;
-    overflow-x: hidden;
+    display: table-row-group !important;
 }
 
-/* Mantener ancho fijo de columnas */
-thead tr, tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-tbody td {
-    text-align: center;
-}
-
-/* Estilos de celdas */
+/* Celdas */
 th, td {
-    padding: 12px 15px;
+    padding: 6px 10px;
     border-bottom: 1px solid #ddd;
     font-size: 0.9rem;
-    justify-content: center; 
-    
+    text-align: center;
 }
 
 /* Hover */
@@ -48,56 +45,10 @@ tbody tr:hover {
     background-color: #f8f8f8;
 }
 
-/* --- Definición de Anchos de Columna para Evitar Amontonamiento --- */
-
-
-th:nth-child(1), td:nth-child(1) {
-    width: 15%;
-    text-align: left; 
+/* Fila seleccionada */
+table tr.selected-user,
+table tr.selected-row {
+    background-color: #e3d6c0 !important;
+    border-left: 5px solid #a17a4a;
+    cursor: default;
 }
-
-
-th:nth-child(2), td:nth-child(2) {
-    width: 90px;
-    min-width: 90px;
-}
-
-
-th:nth-child(3), td:nth-child(3) {
-    width: 25%;
-   
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis; 
-}
-
-
-th:nth-child(4), td:nth-child(4) {
-    width: 15%;
-}
-
-
-th:nth-child(5), td:nth-child(5) {
-    width: 15%;
-    text-align: left;
-}
-
-
-th:nth-child(6), td:nth-child(6) {
-    width: 110px;
-    min-width: 110px;
-}
-
-
-th:nth-child(7), td:nth-child(7) {
-    width: 130px; 
-    min-width: 130px; /*  los botones quepan apilados */
-    padding: 8px 5px; /* padding horizontal */
-}
-/* ESTILO PARA RESALTAR LA FILA SELECCIONADA */
-table tr.selected-user {
-    background-color: #e3d6c0 !important; 
-   border-left: 5px solid #a17a4a; 
-    cursor: default; 
-}
-
