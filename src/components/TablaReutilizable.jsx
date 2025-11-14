@@ -1,4 +1,3 @@
-// src/components/TablaReutilizable.jsx
 import React from "react";
 import "../styles/TablaReutilizable.css";
 

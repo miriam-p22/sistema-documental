@@ -4,13 +4,18 @@
     overflow-x: hidden;      /* NO scroll horizontal */
     width: 100%;
 }
-
+.tabla-respuestas-wrapper {
+  height: 180px; /* Altura fija más pequeña */
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
 /* Tabla */
 table {
     width: 100%;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
-    table-layout: fixed;     /* evita desbordes horizontales */
+    table-layout: fixed;    
 }
 
 /* Encabezados */
@@ -36,7 +41,7 @@ tbody {
 th, td {
     padding: 6px 10px;
     border-bottom: 1px solid #ddd;
-    font-size: 0.9rem;
+    font-size: 12px;  
     text-align: center;
 }
 
