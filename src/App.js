@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Usuarios from "./views/Usuarios";
 import Dispersion from "./views/Dispersion";
 import Organigrama from "./views/Organigrama";
+import Configuracion from "./views/Configuracion";
 import "./App.css";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="Usuarios" element={<Usuarios />} />
          <Route path="Dispersion" element={<Dispersion />} />
           <Route path="organigrama" element={<Organigrama />} />
+          <Route path="Configuracion" element={<Configuracion />} />
         </Route>
 
       </Routes>
