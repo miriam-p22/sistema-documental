@@ -1,10 +1,14 @@
-import React, { Component } from 'react'; // Importar Component
-import BotonReutilizable from '../components/BotonReutilizable';
-import FiltroBusqueda from '../components/FiltroBusqueda'; 
-import TablaReutilizable from '../components/TablaReutilizable';
-import ModalReutilizable from '../components/ModalReutilizable';
-import FormularioUsuario from '../components/FormularioUsuario';
-import FormularioPrivilegios from '../components/FormularioPrivilegios';
+import React, { Component } from "react";
+import "../styles/Usuarios.css";
+
+import BotonReutilizable from "../components/BotonReutilizable";
+import FiltroBusqueda from "../components/FiltroBusqueda";
+import TablaReutilizable from "../components/TablaReutilizable";
+import ModalReutilizable from "../components/ModalReutilizable";
+import FormularioUsuario from "../components/FormularioUsuario";
+import FormularioPrivilegios from "../components/FormularioPrivilegios";
+import EtiquetaEstado from "../components/EtiquetaEstado";
+import BotonDesplegable from "../components/BotonDesplegable";
 
 // Datos de ejemplo
 const initialUsers = [
@@ -16,203 +20,236 @@ const initialUsers = [
   { id: 6, nombre: 'Ana García', numTrabajador: '078', correo: 'agarcia@ejemplo.com', usuario: 'AGarcia', adscripcion: 'Ley Archivo', estatus: 'Activo' },
 ];
 
-// Reemplazamos 'const Usuarios = () => {...}' por una clase que extiende Component
 class Usuarios extends Component {
-    
-    //Inicialización del estado 
-    constructor(props) {
-        super(props);
-        this.state = {
-            users: initialUsers,
-            searchTerm: '',
-            isModalAddOpen: false,
-            isModalEditOpen: false,
-            isModalPrivilegesOpen: false,
-            currentUser: { adscripcion: 'Ninguno' }, // Inicializar con un valor por defecto
-            privilegeData: {},
-        };
-        
-    }
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      users: initialUsers,
+      searchTerm: "",
+      isModalAddOpen: false,
+      isModalEditOpen: false,
+      isModalPrivilegesOpen: false,
+      currentUser: {},
+      privilegeData: {},
+    };
+  }
 
-    // Handlers de modales y estado
-    openAddModal = () => {
-        this.setState({
-            currentUser: { adscripcion: 'Ninguno' }, 
-        });
+  // ------------------------------
+  // Métodos SIN hooks
+  // ------------------------------
+
+  openAddModal = () => {
+    this.setState({ currentUser: { adscripcion: "Ninguno" }, isModalAddOpen: true });
+  };
+
+  openEditModal = (user) => {
+    this.setState({ currentUser: user, isModalEditOpen: true });
+  };
+
+  handleUserInputChange = (e) => {
+    const { name, value } = e.target;
+    this.setState((prev) => ({
+      currentUser: { ...prev.currentUser, [name]: value },
+    }));
+  };
+
+  handlePrivilegeInputChange = (e) => {
+    const { name, value } = e.target;
+    this.setState((prev) => ({
+      privilegeData: { ...prev.privilegeData, [name]: value },
+    }));
+  };
+
+  handleAddUser = () => {
+    const newUser = {
+      ...this.state.currentUser,
+      id: Date.now(),
+      estatus: "Activo",
     };
 
-    openEditModal = (user) => {
-        this.setState({
-            currentUser: user,
-            isModalEditOpen: true,
-        });
-    };
+    this.setState((prev) => ({
+      users: [...prev.users, newUser],
+      isModalAddOpen: false,
+    }));
+  };
 
-    handleUserInputChange = (e) => {
-        const { name, value } = e.target;
-        // Se usa la forma de función de this.setState para acceder al estado previo
-        this.setState(prevState => ({
-            currentUser: {
-                ...prevState.currentUser,
-                [name]: value,
-            }
-        }));
-    };
+  handleEditUser = () => {
+    this.setState((prev) => ({
+      users: prev.users.map((u) =>
+        u.id === prev.currentUser.id ? prev.currentUser : u
+      ),
+      isModalEditOpen: false,
+    }));
+  };
 
-    handlePrivilegeInputChange = (e) => {
-        const { name, value } = e.target;
-        this.setState(prevState => ({
-            privilegeData: {
-                ...prevState.privilegeData,
-                [name]: value,
-            }
-        }));
-    };
-    
-    // búsqueda
-    handleSearchChange = (e) => {
-        this.setState({ searchTerm: e.target.value });
-    }
+  handleStatusChange = (userId, newStatus) => {
+    this.setState((prev) => ({
+      users: prev.users.map((u) =>
+        u.id === userId ? { ...u, estatus: newStatus } : u
+      ),
+    }));
+  };
 
-    // CRUD simulado
-    handleAddUser = () => {
-        const { users, currentUser } = this.state;
-        const newUser = { 
-            ...currentUser, 
-            id: Date.now(), 
-            estatus: 'Activo'
-        };
-        this.setState({
-            users: [...users, newUser],
-            isModalAddOpen: false,
-        });
-    };
+  handleApplyPrivilege = () => {
+    console.log("Privilegio aplicado:", this.state.privilegeData.privilegio);
+    this.setState({ isModalPrivilegesOpen: false });
+  };
 
-    handleEditUser = () => {
-        const { users, currentUser } = this.state;
-        this.setState({
-            users: users.map(u => u.id === currentUser.id ? currentUser : u),
-            isModalEditOpen: false,
-        });
-    };
+getStatusOptions = (userId) => [
+  {
+    label: (
+      <span>
+        <i className="fas fa-check-circle"></i> Activo
+      </span>
+    ),
+    statusClass: "status-active",   // ← VERDE
+    onClick: () => this.handleStatusChange(userId, "Activo"),
+  },
+  {
+    label: (
+      <span>
+        <i className="fas fa-times-circle"></i> Inactivo
+      </span>
+    ),
+    statusClass: "status-inactive", // ← ROJO
+    onClick: () => this.handleStatusChange(userId, "Inactivo"),
+  },
+];
 
-    handleStatusChange = (userId, newStatus) => {
-        this.setState(prevState => ({
-            users: prevState.users.map(u => u.id === userId ? { ...u, estatus: newStatus } : u)
-        }));
-    };
 
-    handleApplyPrivilege = () => {
-        console.log("Privilegio aplicado:", this.state.privilegeData.privilegio);
-        this.setState({ isModalPrivilegesOpen: false });
-    };
+  render() {
+    const {
+      users,
+      searchTerm,
+      isModalAddOpen,
+      isModalEditOpen,
+      isModalPrivilegesOpen,
+      currentUser,
+      privilegeData,
+    } = this.state;
 
-    render() {
-        // Desestructurar el estado para facilitar el acceso
-        const { 
-            users, searchTerm, isModalAddOpen, isModalEditOpen, 
-            isModalPrivilegesOpen, currentUser, privilegeData 
-        } = this.state;
+    const columns = [
+      "Nombre",
+      "Num. Trabajador",
+      "Correo Electrónico",
+      "Usuario",
+      "Adscripción",
+      "Estatus",
+      "Acciones",
+    ];
 
-        // Lógica de filtrado 
-        const filteredUsers = users.filter(user =>
-            user.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+    const filteredUsers = users.filter((u) =>
+      u.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-        const columns = ['Nombre', 'Num. Trabajador', 'Correo Electrónico', 'Usuario', 'Adscripción', 'Estatus', 'Acciones'];
+    const tableData = filteredUsers.map((user) => ({
+      Nombre: { main: user.nombre },
+      "Num. Trabajador": { main: user.numTrabajador },
+      "Correo Electrónico": { main: user.correo },
+      Usuario: { main: user.usuario },
+      Adscripción: { main: user.adscripcion },
+      Estatus: { main: <EtiquetaEstado estatus={user.estatus} /> },
+      Acciones: {
+        main: (
+          <div className="actions-cell">
+            <BotonReutilizable
+              className="btn-action edit"
+              title="Editar Usuario"
+              onClick={() => this.openEditModal(user)}
+            >
+              Editar
+            </BotonReutilizable>
 
-        return (
-            <div className="main-content-wrapper">
+            <BotonDesplegable
+              title="Estado"
+              options={this.getStatusOptions(user.id)}
+            />
+          </div>
+        ),
+      },
+    }));
 
-                <main className="content-area">
-                    <section className="content-section">
-                        <div className="table-container">
-                            <h2 className="card-title">Gestión de Usuarios</h2>
+    return (
+      <div className="main-content-wrapper">
+        <main className="content-area">
+          <section className="content-section">
+            <div className="table-container">
+              <h2 className="card-title">Gestión de Usuarios</h2>
 
-                            {/* BOTONES */}
-                            <div className="management-buttons-container">
-                                
-                                <BotonReutilizable onClick={this.openAddModal}>
-                                    Agregar Usuario
-                                </BotonReutilizable>
+              <div className="management-buttons-container">
+                <BotonReutilizable onClick={this.openAddModal}>
+                  Agregar Usuario
+                </BotonReutilizable>
 
-                                <BotonReutilizable 
-                                    onClick={() => this.setState({ isModalPrivilegesOpen: true })}
-                                    className="btn-privileges-override"
-                                >
-                                    Otorgar Privilegios
-                                </BotonReutilizable>
-                            </div>
-
-                            {/* COMPONENTE DE BÚSQUEDA */}
-                            <div className="search-filter-container">
-                                <FiltroBusqueda
-                                    value={searchTerm}
-                                    
-                                    onChange={this.handleSearchChange}
-                                    placeholder="Buscar usuario por nombre..."
-                                />
-                            </div>
-
-                            {/* TABLA */}
-                            <TablaReutilizable 
-                                columns={columns} 
-                                data={filteredUsers} 
-                                onEditUser={this.openEditModal} 
-                                onStatusChange={this.handleStatusChange} 
-                            />
-                        </div>
-                    </section>
-                </main>
-
-                {/* MODALES */}
-                <ModalReutilizable
-                    id="modalInsertarUsuario"
-                    title="Agregar Usuario"
-                    isOpen={isModalAddOpen}
-                    // Usar this.setState directamente para cerrar
-                    onClose={() => this.setState({ isModalAddOpen: false })}
-                    onAccept={this.handleAddUser}
+                <BotonReutilizable
+                  onClick={() => this.setState({ isModalPrivilegesOpen: true })}
+                  className="btn-privileges-override"
                 >
-                    <FormularioUsuario 
-                        userData={currentUser} 
-                        onInputChange={this.handleUserInputChange} 
-                    />
-                </ModalReutilizable>
+                  Otorgar Privilegios
+                </BotonReutilizable>
+              </div>
 
-                <ModalReutilizable
-                    id="modalEditarUsuario"
-                    title="Editar Usuario"
-                    isOpen={isModalEditOpen}
-                    onClose={() => this.setState({ isModalEditOpen: false })}
-                    onAccept={this.handleEditUser}
-                    acceptButtonText="Guardar"
-                >
-                    <FormularioUsuario 
-                        userData={currentUser} 
-                        onInputChange={this.handleUserInputChange}
-                        isEdit={true}
-                    />
-                </ModalReutilizable>
+              <div className="search-filter-container">
+                <FiltroBusqueda
+                  value={searchTerm}
+                  onChange={(e) =>
+                    this.setState({ searchTerm: e.target.value })
+                  }
+                  placeholder="Buscar usuario por nombre..."
+                />
+              </div>
 
-                <ModalReutilizable
-                    id="modalOtorgarPrivilegios"
-                    title="Otorgar Privilegios"
-                    isOpen={isModalPrivilegesOpen}
-                    onClose={() => this.setState({ isModalPrivilegesOpen: false })}
-                    onAccept={this.handleApplyPrivilege}
-                    acceptButtonText="Aplicar"
-                >
-                    <FormularioPrivilegios 
-                        privilegioData={privilegeData} 
-                        onInputChange={this.handlePrivilegeInputChange}
-                    />
-                </ModalReutilizable>
-
+              <TablaReutilizable columns={columns} data={tableData} />
             </div>
-        );
-    }
+          </section>
+        </main>
+
+        {/* Modales */}
+        <ModalReutilizable
+          id="modalInsertarUsuario"
+          title="Agregar Usuario"
+          isOpen={isModalAddOpen}
+          onClose={() => this.setState({ isModalAddOpen: false })}
+          onAccept={this.handleAddUser}
+        >
+          <FormularioUsuario
+            userData={currentUser}
+            onInputChange={this.handleUserInputChange}
+          />
+        </ModalReutilizable>
+
+        <ModalReutilizable
+          id="modalEditarUsuario"
+          title="Editar Usuario"
+          isOpen={isModalEditOpen}
+          onClose={() => this.setState({ isModalEditOpen: false })}
+          onAccept={this.handleEditUser}
+          acceptButtonText="Guardar"
+        >
+          <FormularioUsuario
+            userData={currentUser}
+            onInputChange={this.handleUserInputChange}
+            isEdit={true}
+          />
+        </ModalReutilizable>
+
+        <ModalReutilizable
+          id="modalOtorgarPrivilegios"
+          title="Otorgar Privilegios"
+          isOpen={isModalPrivilegesOpen}
+          onClose={() => this.setState({ isModalPrivilegesOpen: false })}
+          onAccept={this.handleApplyPrivilege}
+          acceptButtonText="Aplicar"
+        >
+          <FormularioPrivilegios
+            privilegioData={privilegeData}
+            onInputChange={this.handlePrivilegeInputChange}
+          />
+        </ModalReutilizable>
+      </div>
+    );
+  }
 }
 
 export default Usuarios;

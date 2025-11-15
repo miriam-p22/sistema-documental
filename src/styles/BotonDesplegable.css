@@ -1,18 +1,18 @@
-/* ------------------------------------------------------------------- */
-/* Estilos para el Dropdown (BotonDesplegable.jsx) */
-/* ------------------------------------------------------------------- */
+/* -------------------------------------------------------- */
+/* Estilos para el Dropdown (BotonDesplegable.jsx)  */
+/* -------------------------------------------------------- */
 
 .dropdown-action {
     position: relative;
     display: inline-block;
 }
 
-/* BOTÓN PRINCIPAL ("Estado") */
+/* BOTÓN PRINCIPAL ( "Estado") */
 .dropdown-toggle-status {
+    /* Color gris solicitado para el botón principal */
     background-color: #6c757d; 
     color: white; 
     border: none;
-   
     padding: 5px 10px; 
     font-size: 12px;
     
@@ -51,6 +51,7 @@
     border: 1px solid #ddd;
 }
 
+/* Estilo base para las opciones de acción dentro del menú */
 .dropdown-content .btn-action.status-action {
     display: block;
     width: 100%;
@@ -68,7 +69,7 @@
     margin-right: 8px;
 }
 
-/* Color: Activo (Verde) */
+/* Activo (Verde) */
 .btn-action.status-active {
     background-color: #28a745;
     color: white;
@@ -78,7 +79,7 @@
     background-color: #1e7e34;
 }
 
-/* Color: Inactivo (Rojo) */
+/* Inactivo (Rojo) */
 .btn-action.status-inactive {
     background-color: #dc3545;
     color: white;

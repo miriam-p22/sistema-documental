@@ -1,13 +1,17 @@
-// src/components/BadgeEstatus.jsx
 import React from 'react';
 import '../styles/EtiquetaEstado.css';
 
 const EtiquetaEstado = ({ estatus, className = '' }) => {
-  // Mapea el estatus a la clase CSS correspondiente
-  const statusClass = estatus.toLowerCase() === 'activo' ? 'status-active' : 'status-inactive';
+  if (!estatus) {
+    return null; // No renderizar si no hay estatus
+  }
+    
+  const statusKey = estatus.toLowerCase().replace(/\s/g, '-');
   
   return (
-    <span className={`status-badge ${statusClass} ${className}`} data-current-status={estatus.toLowerCase()}>
+    // La clase base 'status-badge' maneja la forma y el tamaño uniforme.
+    // statusKey se mapeará a una clase CSS específica para el color 
+    <span className={`status-badge status-badge-${statusKey} ${className}`} data-current-status={estatus}>
       {estatus}
     </span>
   );

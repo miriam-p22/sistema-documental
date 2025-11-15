@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-//import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
 import '../styles/BotonDesplegable.css';
 
 const BotonDesplegable = ({ title = "Opciones", options = [] }) => {
@@ -30,7 +30,6 @@ const BotonDesplegable = ({ title = "Opciones", options = [] }) => {
           {options.map((opt, index) => (
             <button
               key={index}
-             
               className={`btn-action status-action ${opt.statusClass || ''}`} 
               onClick={(e) => handleOptionClick(e, opt)}
             >

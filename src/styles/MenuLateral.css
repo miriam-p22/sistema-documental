@@ -1,9 +1,8 @@
-/*BARRA LATERAL*/
 .sidebar {
     min-height: 100vh;
     background: #C2B998; /* Color de fondo */
     padding: 0;
-    width: 270px; /* Ancho fijo del Sidebar */
+    width: 260px; /* Ancho fijo del Sidebar */
     z-index: 11;
     transition: width 0.25s ease, 0.25s ease;
     flex-shrink: 0;
@@ -144,33 +143,30 @@ a {
     margin-top: auto;
 }
 
-/* =========================================================
-   SIDEBAR COLAPSADO (.sidebar.collapsed)
-   ========================================================= */
+/* ==========================================
+   SIDEBAR COLAPSADO 
+   ========================================== */
 
-/* 1. Reducir el ancho*/
+/* Reducir el ancho*/
 .sidebar.collapsed {
     width: 80px; /* Ancho reducido fijo para solo mostrar íconos */
     /* Transicion al expandir */
-    transition: width 0.25s ease, 0.25s ease;
+    transition: width 0.25s ease,  0.25s ease;
 }
 
-/* 2. Ocultar todos los elementos de texto */
+/*Ocultar todos los elementos de texto */
 .sidebar.collapsed .menu-title,
-.sidebar.collapsed .tlahuapan-text,
-.sidebar.collapsed .menu-arrow {
+.sidebar.collapsed .tlahuapan-text {
     display: none !important;
-    width: 0; 
-    overflow: hidden;
 }
 
-/* 3. Ajustar el logo y el texto de TLAHUAPAN para centrar solo el logo */
+/*Ajustar el logo y el texto de TLAHUAPAN para centrar solo el logo */
 .sidebar.collapsed .tlahuapan-item {
     padding: 0; 
 }
 
 .sidebar.collapsed .tlahuapan-item .tlahuapan-logo-text {
-    justify-content: center; /* Centra el logo dentro del ancho de 80px */
+    justify-content: center; 
     padding: 10px 0; 
 }
 
@@ -179,7 +175,7 @@ a {
     height: 40px;
 }
 
-/* 4. Ajustar los elementos de navegación para centrar los íconos */
+/* centrar los íconos */
 .sidebar.collapsed .nav-item {
     padding: 0; 
 }
@@ -187,10 +183,10 @@ a {
 .sidebar.collapsed .nav-item .nav-link {
     justify-content: center; /* Centra el ícono dentro de los 80px */
     padding: 0.625rem 0; 
-    width: 100%; /* Toma el 100% de los 80px */
+    width: 100%; 
 }
 
-
+/* Quita el margen derecho del contenedor del ícono */
 .sidebar.collapsed .nav-item .nav-link .icon-bg {
     margin-right: 0; 
 }
