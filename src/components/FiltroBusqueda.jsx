@@ -1,3 +1,4 @@
+// src/components/SearchBar.jsx
 import React from "react";
 import '../styles/FiltroBusqueda.css';
 

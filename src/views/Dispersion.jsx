@@ -15,14 +15,10 @@ const initialData = [
   { id: 1, asunto: "Solicitud para iniciar obras en la vía pública.", numOficio: "Oficio No. 001/2025/DG", tipo: "Notificación de trabajos.pdf", fRecepcion: "20-09-2025", fAsignacion: "20-09-2025", fRespuesta: "21-09-2025", estatus: "Turnado", detalle: "Notificación de Trabajos sobre el Derecho de Vía" },
   { id: 3, asunto: "Permiso para evento deportivo en plaza central.", numOficio: "Oficio No. 002/2025/SG", tipo: "Solicitud de uso de espacio público.pdf", fRecepcion: "22-09-2025", fAsignacion: "22-09-2025", fRespuesta: "25-09-2025", estatus: "Respondido", detalle: "Permiso para evento deportivo en plaza central" },
   { id: 4, asunto: "Permiso para evento deportivo en plaza central.", numOficio: "Oficio No. 002/2025/SG", tipo: "Solicitud de uso de espacio público.pdf", fRecepcion: "22-09-2025", fAsignacion: "22-09-2025", fRespuesta: "25-09-2025", estatus: "Vencido", detalle: "Permiso para evento deportivo en plaza central" },
-  { id: 4, asunto: "Permiso para evento deportivo en plaza central.", numOficio: "Oficio No. 002/2025/SG", tipo: "Solicitud de uso de espacio público.pdf", fRecepcion: "22-09-2025", fAsignacion: "22-09-2025", fRespuesta: "25-09-2025", estatus: "En proceso", detalle: "Permiso para evento deportivo en plaza central" },
+  { id: 5, asunto: "Permiso para evento deportivo en plaza central.", numOficio: "Oficio No. 002/2025/SG", tipo: "Solicitud de uso de espacio público.pdf", fRecepcion: "22-09-2025", fAsignacion: "22-09-2025", fRespuesta: "25-09-2025", estatus: "En proceso", detalle: "Permiso para evento deportivo en plaza central" },
 ];
 
 const initialRespuestas = [
-  { documento: "Informe Técnico.pdf", respuesta: "Recibí respuesta", fechaEntrega: "29-09-2025" },
-  { documento: "Informe Técnico.pdf", respuesta: "Recibí respuesta", fechaEntrega: "29-09-2025" },
-  { documento: "Informe Técnico.pdf", respuesta: "Recibí respuesta", fechaEntrega: "29-09-2025" },
-  { documento: "Informe Técnico.pdf", respuesta: "Recibí respuesta", fechaEntrega: "29-09-2025" },
   { documento: "Informe Técnico.pdf", respuesta: "Recibí respuesta", fechaEntrega: "29-09-2025" },
   { documento: "Informe Técnico.pdf", respuesta: "Recibí respuesta", fechaEntrega: "29-09-2025" },
   { documento: "Informe Técnico.pdf", respuesta: "Recibí respuesta", fechaEntrega: "29-09-2025" },
@@ -64,6 +60,7 @@ class Dispersion extends Component {
     this.filterData = this.filterData.bind(this);
   }
 
+  // --- Setters del estado ---
   setSearchQuery(query) {
     this.setState({ searchQuery: query });
   }
@@ -73,27 +70,26 @@ class Dispersion extends Component {
   }
 
   setFormState(newState) {
-    this.setState((prevState) => ({
-      formState: { ...prevState.formState, ...newState },
+    this.setState(prevState => ({
+      formState: { ...prevState.formState, ...newState }
     }));
   }
 
+  // --- Filtrado ---
   filterData() {
     const { data, searchQuery, activeFilter } = this.state;
-
     return data.filter((doc) => {
       const matchesSearch =
         doc.asunto.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (doc.numOficio &&
-          doc.numOficio.toLowerCase().includes(searchQuery.toLowerCase()));
+        doc.numOficio?.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesFilter =
-        activeFilter === "all" || doc.estatus === activeFilter;
+      const matchesFilter = activeFilter === "all" || doc.estatus === activeFilter;
 
       return matchesSearch && matchesFilter;
     });
   }
 
+  // --- Al seleccionar fila ---
   handleRowClick(doc) {
     this.setState({
       selectedDocument: doc,
@@ -107,45 +103,38 @@ class Dispersion extends Component {
   }
 
   handleAreaChange(area) {
-    this.setState((prevState) => {
-      const newAreas = prevState.formState.areasDestino.includes(area)
-        ? prevState.formState.areasDestino.filter((a) => a !== area)
-        : [...prevState.formState.areasDestino, area];
+    this.setState(prev => {
+      const updated = prev.formState.areasDestino.includes(area)
+        ? prev.formState.areasDestino.filter(a => a !== area)
+        : [...prev.formState.areasDestino, area];
 
       return {
-        formState: { ...prevState.formState, areasDestino: newAreas },
+        formState: { ...prev.formState, areasDestino: updated }
       };
     });
   }
 
+  // --- Renderizar filas ---
   renderDocumentoRow(doc) {
-    const { selectedDocument } = this.state;
+    const selected = this.state.selectedDocument?.id === doc.id;
 
     return (
       <tr
         key={doc.id}
+        className={selected ? "selected-row" : ""}
         onClick={() => this.handleRowClick(doc)}
-        className={
-          selectedDocument && selectedDocument.id === doc.id
-            ? "selected-row"
-            : ""
-        }
       >
         <td>
           <div className="asunto-container">
             <div className="asunto-text">{doc.asunto}</div>
-            {doc.numOficio && (
-              <div className="num-oficio-text">{doc.numOficio}</div>
-            )}
+            {doc.numOficio && <div className="num-oficio-text">{doc.numOficio}</div>}
           </div>
         </td>
         <td>{doc.tipo}</td>
         <td>{doc.fRecepcion}</td>
         <td>{doc.fAsignacion}</td>
         <td>{doc.fRespuesta}</td>
-        <td>
-          <EtiquetaEstado estatus={doc.estatus} />
-        </td>
+        <td><EtiquetaEstado estatus={doc.estatus} /></td>
       </tr>
     );
   }
@@ -160,6 +149,7 @@ class Dispersion extends Component {
     );
   }
 
+  // --- Render principal ---
   render() {
     const { selectedDocument, formState, activeFilter } = this.state;
     const filteredData = this.filterData();
@@ -167,76 +157,65 @@ class Dispersion extends Component {
     return (
       <main className="content-area">
         <div className="main-layout">
+
+          {/* ---------- TABLA PRINCIPAL ---------- */}
           <Card title="Correspondencia" className="table-component">
+
             <div className="toolbar-container">
               <FiltroBusqueda
-                onSearch={this.setSearchQuery}
+                value={this.state.searchQuery}
+                onChange={(e) => this.setSearchQuery(e.target.value)}
                 placeholder="Buscar por Asunto o No. Oficio..."
               />
 
               <DropdownReutilizable
-                title="Filtrar por Estatus"
+                label="Filtrar por Estatus"
                 options={estatusOptions}
-                onFilterChange={this.setActiveFilter}
-                activeFilter={activeFilter}
+                value={activeFilter}
+                onChange={(v) => this.setActiveFilter(v)}
               />
             </div>
 
-            {/* TABLA PRINCIPAL */}
             <div className="tabla-wrapper">
               <TablaReutilizable
                 columns={[
                   "Asunto/Num. Oficio",
                   "Tipo de Documento",
                   "Fecha Recepción",
-                  "Fecha Asignación",
+                  "Fecha Asignada",
                   "Fecha Respuesta",
-                  "Estatus",
+                  "Estatus"
                 ]}
                 data={filteredData}
                 renderRow={this.renderDocumentoRow}
-                className="tabla-principal"
               />
             </div>
 
+            {/* ---------- RESPUESTAS ---------- */}
             <hr className="divider" />
             <h2 className="card-title">Respuestas y Entregas</h2>
 
             <div className="button-group-top">
-              <BotonReutilizable className="btn-accion">
-                Recibí Respuesta
-              </BotonReutilizable>
-              <BotonReutilizable className="btn-accion">
-                Entregué Respuesta
-              </BotonReutilizable>
+              <BotonReutilizable>Recibí Respuesta</BotonReutilizable>
+              <BotonReutilizable>Entregué Respuesta</BotonReutilizable>
             </div>
 
             <div className="tabla-wrapper">
               <TablaReutilizable
-                columns={[
-                  "Documentos",
-                  "Respuesta Recibida",
-                  "Fecha de Entrega",
-                ]}
+                columns={["Documentos", "Respuesta Recibida", "Fecha de Entrega"]}
                 data={initialRespuestas}
                 renderRow={this.renderRespuestaRow}
-                className="tabla-respuestas"
               />
             </div>
+
           </Card>
 
-          {/* FORMULARIO */}
+          {/* ---------- FORMULARIO DE DISPERSIÓN ---------- */}
           <Card className="form-component">
-            <h2>
-              {selectedDocument
-                ? selectedDocument.detalle
-                : "Seleccione un documento para dispersar"}
-            </h2>
+            <h2>{selectedDocument ? selectedDocument.detalle : "Seleccione un documento para dispersar"}</h2>
 
             <VisorDocumento
-              documentUrl={
-                selectedDocument ? `/docs/${selectedDocument.tipo}` : null
-              }
+              documentUrl={selectedDocument ? `/docs/${selectedDocument.tipo}` : null}
               documentTitle={selectedDocument ? selectedDocument.detalle : null}
             />
 
@@ -246,28 +225,24 @@ class Dispersion extends Component {
                 rows="2"
                 placeholder="Escribe el asunto..."
                 value={formState.asunto}
-                onChange={(e) =>
-                  this.setFormState({ asunto: e.target.value })
-                }
+                onChange={(e) => this.setFormState({ asunto: e.target.value })}
               />
             </GrupoEntrada>
 
             <GrupoEntrada label="Fecha límite" id="fechalimite">
               <input
-                type="text"
                 id="fechalimite"
+                type="text"
                 placeholder="Fecha límite"
                 value={formState.fechalimite}
-                onChange={(e) =>
-                  this.setFormState({ fechalimite: e.target.value })
-                }
+                onChange={(e) => this.setFormState({ fechalimite: e.target.value })}
               />
             </GrupoEntrada>
 
             <div className="form-group">
               <label>Área de Destino</label>
-              <div id="area-checkboxes" className="checkbox-group">
-                {areas.map((area) => (
+              <div className="checkbox-group">
+                {areas.map(area => (
                   <CheckboxArea
                     key={area}
                     areaName={area}
@@ -280,12 +255,11 @@ class Dispersion extends Component {
 
             <BotonReutilizable
               className="btn-confirmar"
-              onClick={() =>
-                console.log("Confirmar Dispersión", formState)
-              }
+              onClick={() => console.log("Confirmar Dispersión:", formState)}
             >
               Confirmar Dispersión
             </BotonReutilizable>
+
           </Card>
         </div>
       </main>

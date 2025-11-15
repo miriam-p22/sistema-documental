@@ -1,5 +1,5 @@
 .tabla-wrapper {
-    max-height: 280px;
+    max-height: 350px;
     overflow-y: auto;        /* SOLO scroll vertical */
     overflow-x: hidden;      /* NO scroll horizontal */
     width: 100%;
@@ -15,15 +15,16 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
-    table-layout: fixed;    
+    table-layout: fixed;     /* evita desbordes horizontales */
 }
 
 /* Encabezados */
 thead th {
-    text-align: center;
+    text-align: center !important;
     white-space: normal !important;
     word-break: break-word;
     background-color: #f1f1f1;
+    
 }
 
 /* Encabezado fijo */
