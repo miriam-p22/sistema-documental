@@ -1,114 +1,314 @@
-import React, { Component } from 'react';
-import BotonReutilizable from '../components/BotonReutilizable';
-import FiltroBusqueda from '../components/FiltroBusqueda';
-import TablaReutilizable from '../components/TablaReutilizable';
-import ModalReutilizable from '../components/ModalReutilizable';
+// src/views/Organigrama.jsx
+import React, { Component } from "react";
+import "../styles/Organigrama.css";
+
+import Card from "../components/Card";
+import TablaReutilizable from "../components/TablaReutilizable";
+import FiltroBusqueda from "../components/FiltroBusqueda";
+import BotonReutilizable from "../components/BotonReutilizable";
+import ModalReutilizable from "../components/ModalReutilizable";
+import CampoFormulario from "../components/CampoFormulario";
+
+// ---------------- DATOS SIMULADOS ----------------
+const organigramasMock = [
+  { id: 1, titulo: "Organigrama 2024–2027", autorizacion: "Pendiente", caducidad: "Pendiente" },
+  { id: 2, titulo: "Organigrama 2021–2024", autorizacion: "10-08-2021", caducidad: "10-08-2024" },
+  { id: 3, titulo: "Organigrama 2018–2021", autorizacion: "15-07-2018", caducidad: "15-07-2021" },
+  { id: 4, titulo: "Organigrama 2015–2018", autorizacion: "01-07-2015", caducidad: "01-07-2018" },
+];
+
+const areasMock = [
+  { area: "Presidencia Municipal", nivel: 1, superior: "-" },
+  { area: "H. Cabildo", nivel: 1, superior: "Presidencia Municipal" },
+  { area: "Contraloría Municipal", nivel: 2, superior: "Presidencia Municipal" },
+  { area: "Tesorería Municipal", nivel: 2, superior: "Presidencia Municipal" },
+  { area: "Secretaría del Ayuntamiento", nivel: 2, superior: "Presidencia Municipal" },
+  { area: "Secretaría Técnica", nivel: 2, superior: "Presidencia Municipal" },
+  { area: "Dirección de Obras Públicas", nivel: 3, superior: "Secretaría Técnica" },
+  { area: "Dirección de Desarrollo Urbano", nivel: 3, superior: "Secretaría Técnica" },
+  { area: "Dirección de Cultura y Deporte", nivel: 3, superior: "Secretaría del Ayuntamiento" },
+  { area: "Dirección de Desarrollo Social", nivel: 3, superior: "Secretaría Técnica" },
+  { area: "Dirección de Protección Civil", nivel: 3, superior: "Secretaría Técnica" },
+  { area: "Jefatura de Archivo y Control Documental", nivel: 4, superior: "Secretaría del Ayuntamiento" },
+  { area: "Jefatura de Informática y Sistemas", nivel: 4, superior: "Secretaría Técnica" },
+  { area: "Coordinación de Igualdad de Género", nivel: 4, superior: "Secretaría Técnica" },
+];
 
 class Organigrama extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      organigramas: [],
-      searchTerm: '',
+      organigramas: organigramasMock,
+      gestionAreas: areasMock,
+
+      searchQuery: "",
+      selectedOrg: null,
+
+      // Modales
       isModalCrearOpen: false,
-      isModalAutorizarOpen: false,
       isModalVerOpen: false,
-      organigramaActual: {},
+      isModalInsertarAreaOpen: false,
+      isModalAutorizarOpen: false,
+
+      // Formularios
+      nuevoTitulo: "",
+      nuevaArea: "",
+      nuevoNivel: "",
+      nuevaSuperior: "",
     };
+
+    this.renderOrganigramaRow = this.renderOrganigramaRow.bind(this);
+    this.renderAreaRow = this.renderAreaRow.bind(this);
   }
 
-  handleSearchChange = (e) => this.setState({ searchTerm: e.target.value });
+  // ----------------- FILTRO -----------------
+  setSearchQuery(value) {
+    this.setState({ searchQuery: value });
+  }
 
-  openModal = (modalName, org = {}) => {
-    this.setState({ [modalName]: true, organigramaActual: org });
-  };
+  getFilteredOrganigramas() {
+    const { organigramas, searchQuery } = this.state;
 
-  closeModal = (modalName) => {
-    this.setState({ [modalName]: false });
-  };
-
-  render() {
-    const { organigramas, searchTerm, isModalCrearOpen, isModalAutorizarOpen, isModalVerOpen } = this.state;
-    const filtered = organigramas.filter((o) =>
-      o.titulo?.toLowerCase().includes(searchTerm.toLowerCase())
+    return organigramas.filter(o =>
+      o.titulo.toLowerCase().includes(searchQuery.toLowerCase())
     );
+  }
 
-    const columns = ['Título del Organigrama', 'Fecha de Solicitud', 'Fecha de Autorización', 'Acciones'];
+  // ----------------- ACCIONES -----------------
+  abrirCrear() {
+    this.setState({ nuevoTitulo: "", isModalCrearOpen: true });
+  }
+
+  abrirVer(org) {
+    this.setState({ selectedOrg: org, isModalVerOpen: true });
+  }
+
+  abrirAutorizar() {
+    this.setState({ isModalAutorizarOpen: true });
+  }
+
+  abrirInsertarArea() {
+    this.setState({
+      nuevaArea: "",
+      nuevoNivel: "",
+      nuevaSuperior: "",
+      isModalInsertarAreaOpen: true
+    });
+  }
+
+  crearOrganigrama() {
+    const newOrg = {
+      id: Date.now(),
+      titulo: this.state.nuevoTitulo,
+      autorizacion: "Pendiente",
+      caducidad: "Pendiente"
+    };
+
+    this.setState(prev => ({
+      organigramas: [...prev.organigramas, newOrg],
+      isModalCrearOpen: false
+    }));
+  }
+
+  autorizarOrganigrama() {
+    this.setState({ isModalAutorizarOpen: false });
+  }
+
+  agregarArea() {
+    const nueva = {
+      area: this.state.nuevaArea,
+      nivel: this.state.nuevoNivel,
+      superior: this.state.nuevaSuperior
+    };
+
+    this.setState(prev => ({
+      gestionAreas: [...prev.gestionAreas, nueva],
+      isModalInsertarAreaOpen: false
+    }));
+  }
+
+  // ----------------- TABLA ORGANIGRAMAS -----------------
+  renderOrganigramaRow(org) {
+    const autorizado = org.autorizacion !== "Pendiente";
 
     return (
-      <div className="main-content-wrapper">
-        <main className="content-area">
-          <section className="content-section">
-            <div className="table-container">
-              <h2 className="card-title">Organigrama</h2>
+      <tr key={org.id}>
+        <td>{org.titulo}</td>
+        <td>{org.autorizacion}</td>
+        <td>{org.caducidad}</td>
 
-              <div className="management-buttons-container">
-                <BotonReutilizable onClick={() => this.openModal('isModalCrearOpen')}>
-                  Crear Organigrama
-                </BotonReutilizable>
-              </div>
+        <td>
+          <div className="actions-cell">
 
-              <TablaReutilizable
-                columns={columns}
-                data={filtered}
-                renderActions={(org) => (
-                  <>
-                    <button
-                      className="btn-action edit"
-                      onClick={() => this.openModal('isModalAutorizarOpen', org)}
-                    >
-                      Autorizar
-                    </button>
-                    <button
-                      className="btn-action btn-blue"
-                      onClick={() => this.openModal('isModalVerOpen', org)}
-                    >
-                      Ver
-                    </button>
-                  </>
-                )}
-              />
-            </div>
-          </section>
-        </main>
+            {/* SI NO ESTÁ AUTORIZADO -> MOSTRAR EDITAR */}
+            {!autorizado && (
+              <BotonReutilizable
+                className="btn-action edit"
+                onClick={() => this.abrirCrear(org)}
+              >
+                Editar
+              </BotonReutilizable>
+            )}
 
-        {/* MODALES */}
+            {/* SIEMPRE MOSTRAR VER */}
+            <BotonReutilizable
+              className="btn-action status-active"
+              onClick={() => this.abrirVer(org)}
+            >
+              Ver
+            </BotonReutilizable>
+          </div>
+        </td>
+      </tr>
+    );
+  }
+
+  // ----------------- TABLA GESTIÓN DE ÁREAS -----------------
+  renderAreaRow(area, index) {
+    return (
+      <tr key={index}>
+        <td>{area.area}</td>
+        <td>{area.nivel}</td>
+        <td>{area.superior}</td>
+      </tr>
+    );
+  }
+
+  // ----------------- VISTA -----------------
+  render() {
+    const { selectedOrg } = this.state;
+
+    return (
+      <main className="content-area">
+        <section className="content-section">
+          <h2 className="card-title">Organigrama</h2>
+
+          {/* BOTÓN CREAR */}
+          <div className="management-buttons-container">
+            <BotonReutilizable onClick={() => this.abrirCrear()}>
+              Crear Organigrama
+            </BotonReutilizable>
+          </div>
+
+          {/* TABLA ORGANIGRAMAS */}
+          <Card>
+            <TablaReutilizable
+              columns={[
+                "Título del Organigrama",
+                "Fecha de autorización",
+                "Fecha de caducidad",
+                "Acciones"
+              ]}
+              data={this.getFilteredOrganigramas()}
+              renderRow={(item) => this.renderOrganigramaRow(item)}
+            />
+          </Card>
+
+          {/* --------- SECCIÓN GESTIÓN ORGANIZACIONAL --------- */}
+          <h2 className="card-title">Gestión organizacional</h2>
+
+          <div className="management-buttons-container">
+            <BotonReutilizable onClick={() => this.abrirInsertarArea()}>
+              Agregar áreas
+            </BotonReutilizable>
+
+            <BotonReutilizable
+              className="status-active"
+              onClick={() => this.abrirAutorizar()}
+            >
+              Autorizar Organigrama
+            </BotonReutilizable>
+          </div>
+
+          <Card>
+            <TablaReutilizable
+              columns={["Área", "Nivel", "Área superior"]}
+              data={this.state.gestionAreas}
+              renderRow={(item, index) => this.renderAreaRow(item, index)}
+            />
+          </Card>
+        </section>
+
+        {/* ---------------- MODAL CREAR ---------------- */}
         <ModalReutilizable
-          id="modalCrearOrganigrama"
           title="Nueva versión de organigrama"
-          isOpen={isModalCrearOpen}
-          onClose={() => this.closeModal('isModalCrearOpen')}
-          onAccept={() => this.closeModal('isModalCrearOpen')}
+          isOpen={this.state.isModalCrearOpen}
+          onClose={() => this.setState({ isModalCrearOpen: false })}
+          onAccept={() => this.crearOrganigrama()}
           acceptButtonText="Crear"
         >
-          <label className="field">
-            <span>Título del organigrama</span>
-            <input className="input" type="text" placeholder="Ej. Organigrama 2025–2028" />
-          </label>
+          <CampoFormulario
+            label="Título del organigrama"
+            value={this.state.nuevoTitulo}
+            onChange={(e) => this.setState({ nuevoTitulo: e.target.value })}
+            placeholder="Ej. Organigrama 2025–2028"
+          />
         </ModalReutilizable>
 
+        {/* ---------------- MODAL VER CON ORGANIGRAMA VISUAL ---------------- */}
         <ModalReutilizable
-          id="modalAutorizarOrganigrama"
+          title="Organigrama Autorizado"
+          isOpen={this.state.isModalVerOpen}
+          onClose={() => this.setState({ isModalVerOpen: false })}
+          onAccept={() => this.setState({ isModalVerOpen: false })}
+          acceptButtonText="Cerrar"
+        >
+          <div className="organigrama-visual-container">
+            <img
+              src="/imagenes/organigrama_demo.png"
+              alt="Organigrama"
+              style={{
+                width: "100%",
+                objectFit: "contain",
+                borderRadius: "8px"
+              }}
+            />
+          </div>
+        </ModalReutilizable>
+
+        {/* ---------------- MODAL AUTORIZAR ---------------- */}
+        <ModalReutilizable
           title="Autorizar organigrama"
-          isOpen={isModalAutorizarOpen}
-          onClose={() => this.closeModal('isModalAutorizarOpen')}
-          onAccept={() => this.closeModal('isModalAutorizarOpen')}
+          isOpen={this.state.isModalAutorizarOpen}
+          onClose={() => this.setState({ isModalAutorizarOpen: false })}
+          onAccept={() => this.autorizarOrganigrama()}
           acceptButtonText="Solicitar"
         >
           <p>¿Desea solicitar la autorización del organigrama actual?</p>
         </ModalReutilizable>
 
+        {/* ---------------- MODAL INSERTAR ÁREA ---------------- */}
         <ModalReutilizable
-          id="modalVerOrganigrama"
-          title="Organigrama autorizado"
-          isOpen={isModalVerOpen}
-          onClose={() => this.closeModal('isModalVerOpen')}
+          title="Agregar área"
+          isOpen={this.state.isModalInsertarAreaOpen}
+          onClose={() => this.setState({ isModalInsertarAreaOpen: false })}
+          onAccept={() => this.agregarArea()}
+          acceptButtonText="Agregar"
         >
-          <div id="contenedorOrganigrama" style={{ minHeight: '300px' }}>
-            <p>Vista del organigrama autorizado aquí.</p>
-          </div>
+          <CampoFormulario
+            label="Nombre del área"
+            value={this.state.nuevaArea}
+            onChange={(e) => this.setState({ nuevaArea: e.target.value })}
+            placeholder="Dirección de..."
+          />
+
+          <CampoFormulario
+            label="Nivel"
+            type="number"
+            value={this.state.nuevoNivel}
+            onChange={(e) => this.setState({ nuevoNivel: e.target.value })}
+          />
+
+          <CampoFormulario
+            label="Área superior"
+            value={this.state.nuevaSuperior}
+            onChange={(e) => this.setState({ nuevaSuperior: e.target.value })}
+            placeholder="Presidencia Municipal"
+          />
         </ModalReutilizable>
-      </div>
+
+      </main>
     );
   }
 }

@@ -4,7 +4,10 @@ import Layout from "./components/Layout";
 import Usuarios from "./views/Usuarios";
 import Dispersion from "./views/Dispersion";
 import Organigrama from "./views/Organigrama";
+import Documentos from "./views/Documentos";
 import Configuracion from "./views/Configuracion";
+import LeyArchivo from "./views/LeyArchivo";
+
 import "./App.css";
 
 function App() {
@@ -17,6 +20,8 @@ function App() {
           <Route path="Usuarios" element={<Usuarios />} />
          <Route path="Dispersion" element={<Dispersion />} />
           <Route path="organigrama" element={<Organigrama />} />
+          <Route path="Documentos" element={<Documentos />} />
+          <Route path="LeyArchivo" element={<LeyArchivo />} />
           <Route path="Configuracion" element={<Configuracion />} />
         </Route>
 
