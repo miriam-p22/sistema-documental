@@ -43,3 +43,10 @@ th:nth-child(7), td:nth-child(7) {
     min-width: 130px; /* Para que los botones quepan apilados */
     padding: 8px 5px; /* Reducir padding horizontal */
 }
+/*Card*/
+.table-card {
+    flex: 1;          
+    min-height: 450px; 
+    display: flex;
+    flex-direction: column;
+}

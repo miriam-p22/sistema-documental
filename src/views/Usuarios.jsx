@@ -1,6 +1,7 @@
 // src/views/Usuarios.jsx
 import React, { Component } from 'react';
-import '../styles/Usuarios.css'
+import '../styles/Usuarios.css';
+
 import BotonReutilizable from '../components/BotonReutilizable';
 import FiltroBusqueda from '../components/FiltroBusqueda';
 import TablaReutilizable from '../components/TablaReutilizable';
@@ -9,7 +10,9 @@ import FormularioUsuario from '../components/FormularioUsuario';
 import FormularioPrivilegios from '../components/FormularioPrivilegios';
 import EtiquetaEstado from '../components/EtiquetaEstado';
 import BotonDesplegable from '../components/BotonDesplegable';
+import Card from '../components/Card';
 
+// Datos iniciales
 const initialUsers = [
   { id: 1, nombre: 'Jacob Pérez', numTrabajador: '012', correo: 'jacob@ejemplo.com', usuario: 'Jacob', adscripcion: 'Ley Archivo', estatus: 'Activo' },
   { id: 2, nombre: 'Melissa López', numTrabajador: '003', correo: 'melissa@ejemplo.com', usuario: 'Melissa', adscripcion: 'Oficialía de Partes', estatus: 'Inactivo' },
@@ -17,8 +20,8 @@ const initialUsers = [
   { id: 4, nombre: 'Sofía Martínez', numTrabajador: '125', correo: 'smartinez@ejemplo.com', usuario: 'SMartinez', adscripcion: 'Presidencia municipal', estatus: 'Activo' },
   { id: 5, nombre: 'Carlos Ruiz', numTrabajador: '045', correo: 'cruiz@ejemplo.com', usuario: 'CRuiz', adscripcion: 'Contraloria', estatus: 'Inactivo' },
   { id: 6, nombre: 'Ana García', numTrabajador: '078', correo: 'agarcia@ejemplo.com', usuario: 'AGarcia', adscripcion: 'Ley Archivo', estatus: 'Activo' },
-   { id: 7, nombre: 'Ana García', numTrabajador: '078', correo: 'agarcia@ejemplo.com', usuario: 'AGarcia', adscripcion: 'Ley Archivo', estatus: 'Activo' },
-    { id: 8, nombre: 'Ana García', numTrabajador: '078', correo: 'agarcia@ejemplo.com', usuario: 'AGarcia', adscripcion: 'Ley Archivo', estatus: 'Activo' },
+  { id: 7, nombre: 'Ana García', numTrabajador: '078', correo: 'agarcia@ejemplo.com', usuario: 'AGarcia', adscripcion: 'Ley Archivo', estatus: 'Activo' },
+  { id: 8, nombre: 'Ana García', numTrabajador: '078', correo: 'agarcia@ejemplo.com', usuario: 'AGarcia', adscripcion: 'Ley Archivo', estatus: 'Activo' },
 ];
 
 class Usuarios extends Component {
@@ -36,16 +39,25 @@ class Usuarios extends Component {
       privilegeData: {},
       selectedUserId: null
     };
-
-    // bind de métodos
-    this.handleUserInputChange = this.handleUserInputChange.bind(this);
-    this.handlePrivilegeInputChange = this.handlePrivilegeInputChange.bind(this);
-    this.handleStatusChange = this.handleStatusChange.bind(this);
   }
 
-  // -------------------
-  // HANDLERS PRINCIPALES
-  // -------------------
+  // ---------------------
+  // Métodos principales
+  // ---------------------
+
+  handleUserInputChange = (e) => {
+    const { name, value } = e.target;
+    this.setState(prev => ({
+      currentUser: { ...prev.currentUser, [name]: value }
+    }));
+  };
+
+  handlePrivilegeInputChange = (e) => {
+    const { name, value } = e.target;
+    this.setState(prev => ({
+      privilegeData: { ...prev.privilegeData, [name]: value }
+    }));
+  };
 
   openAddModal = () => {
     this.setState({
@@ -60,20 +72,6 @@ class Usuarios extends Component {
       isModalEditOpen: true
     });
   };
-
-  handleUserInputChange(e) {
-    const { name, value } = e.target;
-    this.setState(prev => ({
-      currentUser: { ...prev.currentUser, [name]: value }
-    }));
-  }
-
-  handlePrivilegeInputChange(e) {
-    const { name, value } = e.target;
-    this.setState(prev => ({
-      privilegeData: { ...prev.privilegeData, [name]: value }
-    }));
-  }
 
   handleAddUser = () => {
     const newUser = {
@@ -97,20 +95,19 @@ class Usuarios extends Component {
     }));
   };
 
-  handleStatusChange(userId, newStatus) {
+  handleStatusChange = (userId, newStatus) => {
     this.setState(prev => ({
       users: prev.users.map(u =>
         u.id === userId ? { ...u, estatus: newStatus } : u
       )
     }));
-  }
+  };
 
   handleApplyPrivilege = () => {
     console.log("Privilegio aplicado:", this.state.privilegeData.privilegio);
     this.setState({ isModalPrivilegesOpen: false });
   };
 
-  // Opciones de estado
   getStatusOptions = (userId) => [
     {
       label: "Activo",
@@ -127,7 +124,6 @@ class Usuarios extends Component {
   render() {
     const { users, searchTerm, selectedUserId } = this.state;
 
-    // FILTRO
     const filteredUsers = users.filter(user =>
       user.nombre.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -162,38 +158,40 @@ class Usuarios extends Component {
     return (
       <div className="main-content-wrapper">
         <main className="content-area">
-          <section className="content-section">
-            <div className="table-container">
-              <h2 className="card-title">Gestión de Usuarios</h2>
 
-              <div className="management-buttons-container">
-                <BotonReutilizable onClick={this.openAddModal}>
-                  Agregar Usuario
-                </BotonReutilizable>
+          {/* ----------------------- */}
+          {/* CARD con TABLA ADENTRO */}
+          {/* ----------------------- */}
+          <Card title="Gestión de Usuarios" className="card-usuarios">
 
-                <BotonReutilizable
-                  onClick={() => {
-                    if (!this.state.selectedUserId) {
-                      alert("Seleccione un usuario antes de otorgar privilegios.");
-                      return;
-                    }
-                    this.setState({ isModalPrivilegesOpen: true });
-                  }}
-                  className="btn-privileges-override"
-                >
-                  Otorgar Privilegios
-                </BotonReutilizable>
-              </div>
+            <div className="management-buttons-container">
+              <BotonReutilizable onClick={this.openAddModal}>
+                Agregar Usuario
+              </BotonReutilizable>
 
-              <div className="search-filter-container">
-                <FiltroBusqueda
-                  value={this.state.searchTerm}
-                  onChange={(e) => this.setState({ searchTerm: e.target.value })}
-                  placeholder="Buscar usuario por nombre..."
-                />
-              </div>
+              <BotonReutilizable
+                onClick={() => {
+                  if (!this.state.selectedUserId) {
+                    alert("Seleccione un usuario antes de otorgar privilegios.");
+                    return;
+                  }
+                  this.setState({ isModalPrivilegesOpen: true });
+                }}
+                className="btn-privileges-override"
+              >
+                Otorgar Privilegios
+              </BotonReutilizable>
+            </div>
 
-              {/* TABLA */}
+            <div className="search-filter-container">
+              <FiltroBusqueda
+                value={this.state.searchTerm}
+                onChange={(e) => this.setState({ searchTerm: e.target.value })}
+                placeholder="Buscar usuario por nombre..."
+              />
+            </div>
+
+            <div className="card-table">
               <TablaReutilizable
                 columns={columns}
                 data={tableData}
@@ -217,10 +215,14 @@ class Usuarios extends Component {
                 }}
               />
             </div>
-          </section>
+
+          </Card>
         </main>
 
-        {/* MODAL AGREGAR */}
+        {/* ---------------- */}
+        {/* MODALES */}
+        {/* ---------------- */}
+
         <ModalReutilizable
           title="Agregar Usuario"
           isOpen={this.state.isModalAddOpen}
@@ -233,7 +235,6 @@ class Usuarios extends Component {
           />
         </ModalReutilizable>
 
-        {/* MODAL EDITAR */}
         <ModalReutilizable
           title="Editar Usuario"
           isOpen={this.state.isModalEditOpen}
@@ -248,7 +249,6 @@ class Usuarios extends Component {
           />
         </ModalReutilizable>
 
-        {/* MODAL PRIVILEGIOS */}
         <ModalReutilizable
           title="Otorgar Privilegios"
           isOpen={this.state.isModalPrivilegesOpen}
