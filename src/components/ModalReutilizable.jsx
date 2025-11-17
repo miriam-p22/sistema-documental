@@ -1,14 +1,25 @@
-// src/components/ModalBase.jsx
 import React from 'react';
 import '../styles/ModalReutilizable.css';
 
-const ModalReutilizable = ({ id, title, children, formId, isOpen, onClose, onAccept, acceptButtonText = 'Aceptar' }) => {
+const ModalReutilizable = ({ 
+  id, 
+  title, 
+  children, 
+  formId, 
+  isOpen, 
+  onClose, 
+  onAccept, 
+  acceptButtonText = 'Aceptar',
+  className = "",
+  hideFooter = false   // <-- NUEVA PROP
+}) => {
+
   if (!isOpen) return null;
 
   return (
-    // 'modal' y 'modal-card' clases vienen del HTML original
     <div className="modal" id={id} aria-hidden={!isOpen}>
-      <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby={`${id}-title`}>
+      <div className={`modal-card ${className}`} role="dialog" aria-modal="true" aria-labelledby={`${id}-title`}>
+        
         <header className="modal-head">
           <h3 id={`${id}-title`}>{title}</h3>
           <button className="icon-btn close-red" onClick={onClose} aria-label="Cerrar">x</button>
@@ -20,17 +31,21 @@ const ModalReutilizable = ({ id, title, children, formId, isOpen, onClose, onAcc
           </form>
         </div>
 
-        <footer className="modal-foot">
-          <button 
-            className="btn btn-primary" 
-            type="submit" 
-            form={formId} 
-            onClick={(e) => { e.preventDefault(); onAccept(); }} // Prevención básica de submit y llamada a prop
-          >
-            {acceptButtonText}
-          </button>
-          <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-        </footer>
+        {/* ⬇️ SI hideFooter ES TRUE, NO SE RENDERIZA EL FOOTER */}
+        {!hideFooter && (
+          <footer className="modal-foot">
+            <button 
+              className="btn btn-primary" 
+              type="submit" 
+              form={formId} 
+              onClick={(e) => { e.preventDefault(); onAccept(); }}
+            >
+              {acceptButtonText}
+            </button>
+            <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+          </footer>
+        )}
+
       </div>
     </div>
   );

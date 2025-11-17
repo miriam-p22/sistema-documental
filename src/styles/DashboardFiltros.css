@@ -1,0 +1,101 @@
+/* =========================================================
+   FILTROS SUPERIORES – DashboardFiltros.jsx
+   ========================================================= */
+
+.periodo-filtros {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 5px 10px;            
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+
+    /* Subirlo más cerca del navbar */
+    margin-top: -21px;
+
+    /*  Reducir el ancho del contenedor */
+    max-width: 103.2%;
+    margin-left: -25px;
+    margin-right: 10px;
+
+    border-radius: 2px;           
+}
+
+
+.filtro-grupo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filtro-grupo label {
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filtro-grupo select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.filtro-grupo select:hover {
+    border-color: #4a7da1;
+}
+
+.filtro-grupo select:focus {
+    outline: none;
+    border-color: #4a7da1;
+    box-shadow: 0 0 0 2px rgba(74, 125, 161, 0.1);
+}
+
+.btn-actualizar {
+    padding: 8px 20px;
+    background-color: #4a7da1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-actualizar:hover {
+    background-color: #3b6a8b;
+}
+
+.periodo-indicadores {
+    text-align: center;
+    color: #777;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .periodo-filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filtro-grupo {
+        width: 100%;
+    }
+    
+    .btn-actualizar {
+        width: 100%;
+        justify-content: center;
+    }
+}

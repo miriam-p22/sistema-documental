@@ -1,0 +1,31 @@
+/* Contenedor general */
+.dashboard-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* <-- ESTO IGUALA LAS ALTURAS AUTOMÁTICAMENTE */
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Card izquierda */
+.circulos-card {
+    flex: 0.6;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Card derecha */
+.barras-card {
+    flex: 1;
+    min-width: 482px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ambas tarjetas igualan altura automáticamente */
+.circulos-card,
+.barras-card {
+    height: auto; 
+}
