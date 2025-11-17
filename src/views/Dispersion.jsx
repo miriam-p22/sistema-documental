@@ -169,7 +169,7 @@ class Dispersion extends Component {
               />
 
               <DropdownReutilizable
-                label="Filtrar por Estatus"
+                /*label="Filtrar por Estatus"*/
                 options={estatusOptions}
                 value={activeFilter}
                 onChange={(v) => this.setActiveFilter(v)}

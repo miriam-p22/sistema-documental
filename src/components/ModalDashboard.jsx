@@ -5,7 +5,7 @@ import TablaReutilizable from "./TablaReutilizable";
 import DropdownReutilizable from "./DropdownReutilizable";
 import EtiquetaEstado from "./EtiquetaEstado";
 
-class ModalDetallesDocumentos extends React.Component {
+class ModalDashboard extends React.Component {
   constructor(props) {
     super(props);
 
@@ -108,4 +108,4 @@ class ModalDetallesDocumentos extends React.Component {
   }
 }
 
-export default ModalDetallesDocumentos;
+export default ModalDashboard;

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Usuarios from "./views/Usuarios";
+import Dashboard from "./views/Dashboard";
 import Dispersion from "./views/Dispersion";
 import Organigrama from "./views/Organigrama";
 import Documentos from "./views/Documentos";
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Usuarios />} />
           <Route path="Usuarios" element={<Usuarios />} />
+          <Route path="Dashboard" element={<Dashboard />} />
          <Route path="Dispersion" element={<Dispersion />} />
           <Route path="organigrama" element={<Organigrama />} />
           <Route path="Documentos" element={<Documentos />} />

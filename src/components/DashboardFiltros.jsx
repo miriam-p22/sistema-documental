@@ -1,6 +1,6 @@
 import React from "react";
 import DropdownReutilizable from "./DropdownReutilizable";
-import "../styles/DashboardFiltros.css"
+import "../styles/DashboardFiltros.css";
 
 const DashboardFiltros = ({ anio, mes, setAnio, setMes, onActualizar }) => {
   const opcionesAnio = [
@@ -26,24 +26,28 @@ const DashboardFiltros = ({ anio, mes, setAnio, setMes, onActualizar }) => {
   ];
 
   return (
-    <div className="periodo-filtros">
-      <DropdownReutilizable
-        label="Año:"
-        value={anio}
-        onChange={setAnio}
-        options={opcionesAnio}
-      />
+    <div className="dashboard-filtros">
+      <div className="periodo-filtros">
+        
+        <DropdownReutilizable
+          label="Año:"
+          value={anio}
+          onChange={setAnio}
+          options={opcionesAnio}
+        />
 
-      <DropdownReutilizable
-        label="Mes:"
-        value={mes}
-        onChange={setMes}
-        options={opcionesMes}
-      />
+        <DropdownReutilizable
+          label="Mes:"
+          value={mes}
+          onChange={setMes}
+          options={opcionesMes}
+        />
 
-      <button className="btn-actualizar" onClick={onActualizar}>
-        <i className="fas fa-sync-alt"></i> Actualizar
-      </button>
+        <button className="btn-actualizar" onClick={onActualizar}>
+          <i className="fas fa-sync-alt"></i> Actualizar
+        </button>
+
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 /* =========================================================
  * BARRA SUPERIOR (NAVBAR)
  * =========================================================
-*/
+ */
 
 .navbar {
     display: flex;
@@ -10,7 +10,13 @@
     padding: 10px 20px;
     background-color: #fff;
     border-bottom: 1px solid #ddd;
-    flex-shrink: 0; 
+    flex-shrink: 0;
+    /* Si la barra va a ser fija en la parte superior, se añade estas propiedades: */
+    /* position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; */
 }
 
 /* Grupo izquierda (ícono menú + buscador) */
@@ -41,7 +47,7 @@
 }
 
 /* ============================
-   NOTIFICACIONES (BADGE ROJO)
+   NOTIFICACIONES (BADGE Y MENÚ)
    ============================ */
 
 .notification-dropdown-container {
@@ -52,6 +58,7 @@
     align-items: center;
 }
 
+/* Badge rojo de notificaciones */
 .notification-badge {
     position: absolute;
     top: -2px;
@@ -68,14 +75,15 @@
     text-align: center;
     box-shadow: 0 0 0 2px #fff;
     z-index: 1001;
-    display: none;
+    display: none; /* Oculto por defecto */
 }
 
+/* Regla para mostrar el badge si hay conteo */
 .notification-badge[data-count]:not([data-count="0"]) {
     display: block;
 }
 
-/* Dropdowns de usuario y notificaciones */
+/* Contenedores que usan position: relative para los dropdowns */
 .notification-dropdown-container,
 .profile-info-container {
     position: relative;
@@ -85,23 +93,27 @@
     align-items: center;
 }
 
-/* Menú desplegable */
+/* Menú desplegable  */
 .dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: 100%; /* Posiciona debajo del contenedor padre */
     right: 0;
-    width: 300px;
+    width: 350px; /* Ancho  */
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     z-index: 1000;
-    display: none;
+    
+    /* ESTILOS DE OCULTAMIENTO BASE */
+    display: none; 
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
-    padding: 10px 0;
+    padding: 0;
+    overflow: hidden; 
 }
 
+/* ESTILOS PARA MOSTRAR LA VENTANA */
 .dropdown-menu.visible {
     display: block;
     opacity: 1;
@@ -110,31 +122,60 @@
 .dropdown-title {
     font-weight: bold;
     color: #444;
-    padding: 5px 15px;
+    padding: 10px 15px; 
     border-bottom: 1px solid #eee;
-    margin-bottom: 5px;
+    margin-bottom: 0;
 }
 
-.dropdown-item {
-    display: block;
+/* Contenedor con scroll para las notificaciones */
+.notification-list-scrollable {
+    max-height: 250px; 
+    overflow-y: auto; 
+    padding: 0; 
+}
+
+/* Estilo individual de cada notificación */
+.notification-item {
     padding: 10px 15px;
-    text-decoration: none;
-    color: #555;
-    font-size: 14px;
-    white-space: normal;
+    cursor: pointer;
+    border-bottom: 1px solid #f4f4f4; 
+    text-decoration: none; /* En caso de que se use un <a> como item */
+    display: block;
 }
 
-.dropdown-item:hover {
+.notification-item:hover {
     background-color: #f4f7f6;
     color: #333;
 }
 
+.notification-message {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.notification-time {
+    display: block;
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+}
+
+/* Estilo para el botón/enlace de 'Ver todas' */
 .dropdown-item.view-all {
     text-align: center;
-    font-weight: bold;
-    color: #007bff;
+    font-weight: 600; 
+    color: #007bff; 
     border-top: 1px solid #eee;
-    margin-top: 5px;
+    margin-top: 0;
+    padding: 10px 15px;
+    background-color: #f7f9fc; 
+    display: block; /* Asegura que ocupe todo el ancho */
+}
+
+.dropdown-item.view-all:hover {
+    background-color: #e9ecef;
+    color: #0056b3;
 }
 
 a {
