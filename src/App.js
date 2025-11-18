@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPrincipal from "./views/LoginPrincipal";
 import Layout from "./components/Layout";
 import Usuarios from "./views/Usuarios";
 import Dashboard from "./views/Dashboard";
@@ -15,9 +16,10 @@ function App() {
   return (
      <Router>
       <Routes>
+         <Route path="/login" element={<LoginPrincipal />} />
+         <Route index element={<LoginPrincipal />} />
 
         <Route path="/" element={<Layout />}>
-          <Route index element={<Usuarios />} />
           <Route path="Usuarios" element={<Usuarios />} />
           <Route path="Dashboard" element={<Dashboard />} />
          <Route path="Dispersion" element={<Dispersion />} />

@@ -1,0 +1,36 @@
+// src/components/ModalClave.jsx
+import React from "react";
+import "../styles/VentanaClaveIP.css";
+
+const VentanaClaveModal = ({ isOpen, onClose, onConfirm, clave, setClave, mensaje }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Ingresa la Clave Especial</h2>
+
+        <input
+          type="password"
+          className="modal-input"
+          placeholder="Escribe la clave"
+          value={clave}
+          onChange={(e) => setClave(e.target.value)}
+        />
+
+        {mensaje && <p className="mensaje-error">{mensaje}</p>}
+
+        <div className="modal-buttons">
+          <button className="modal-btn confirmar" onClick={onConfirm}>
+            Confirmar
+          </button>
+          <button className="modal-btn cancelar" onClick={onClose}>
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default VentanaClaveModal;

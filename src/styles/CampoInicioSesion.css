@@ -1,0 +1,21 @@
+.campo-reutilizable {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.input-reutilizable {
+  width: 100%;         /* más largo dentro del card */
+  max-width: 550px;   /* Ancho del campo */
+  padding: 12px;      /* aumenta altura */
+  border: 1px solid #a1a1a1;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.input-reutilizable:focus {
+  outline: none;
+  border-color: #555b5b;
+}
