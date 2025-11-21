@@ -6,6 +6,10 @@ import CampoInicioSesion from "../components/CampoInicioSesion";
 import VentanaClaveModal from "../components/VentanaClaveModal";
 import RegistroUsuario from "../components/RegistroUsuario";
 
+// Importación de imágenes desde assets
+import fondoInicioSesion from "../assets/fondoInicioSesion.jpg";
+import logoTlahuapan from "../assets/logo_tlahuapan.png";
+
 class LoginPrincipal extends Component {
   constructor(props) {
     super(props);
@@ -96,12 +100,12 @@ class LoginPrincipal extends Component {
       <div
         className="login-principal"
         style={{
-          backgroundImage: "url(/imagenes/fondoInicioSesion.jpg)",
+          backgroundImage: `url(${fondoInicioSesion})`,
         }}
       >
         <div className="login-card">
           <div className="logo-button" onClick={this.openModalClave}>
-            <img src="/imagenes/logo_tlahuapan.png" alt="Logo" className="logo" />
+            <img src={logoTlahuapan} alt="Logo" className="logo" />
           </div>
 
           <form onSubmit={this.onLogin}>

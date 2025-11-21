@@ -1,37 +1,41 @@
 import React from "react";
 import "../styles/BarraNavegacion.css";
 
+// Importar imágenes desde src/assets
+import menuIcon from "../assets/menu.png";
+import userIcon from "../assets/usuario.png";
+import notifIcon from "../assets/notificacion.png";
+
 // Componente para una notificación individual (usado internamente)
 const NotificationItem = ({ message, time }) => (
-    <div className="notification-item">
-      <p className="notification-message">{message}</p>
-      <span className="notification-time">{time}</span>
-    </div>
+  <div className="notification-item">
+    <p className="notification-message">{message}</p>
+    <span className="notification-time">{time}</span>
+  </div>
 );
 
 function Navbar({
   onToggleSidebar,
   userName,
-  notifications = [], //array de notificaciones
+  notifications = [],
   notifMenuOpen,
   toggleNotificationMenu,
-  onViewAllNotifications // Función para manejar el clic en 'Ver todas'
+  onViewAllNotifications
 }) {
   const unreadCount = notifications.length;
 
-  // Maneja el clic en "Ver todas"
   const handleViewAllClick = (e) => {
-    e.preventDefault(); 
-    e.stopPropagation(); 
-    toggleNotificationMenu(); // Cierra el menú (opcional, si el padre no lo cierra automáticamente)
-    onViewAllNotifications(); // Llama a la acción principal
+    e.preventDefault();
+    e.stopPropagation();
+    toggleNotificationMenu();
+    onViewAllNotifications();
   };
 
   return (
     <header className="navbar">
       <div className="header-left-group">
         <img
-          src="/imagenes/menu.png"
+          src={menuIcon}
           alt="Menú"
           className="icon-control-img"
           onClick={onToggleSidebar}
@@ -41,7 +45,7 @@ function Navbar({
 
       <div className="user-info">
         <div className="profile-info-container">
-          <img src="/imagenes/usuario.png" alt="Usuario" className="icon-control-img" />
+          <img src={userIcon} alt="Usuario" className="icon-control-img" />
           <span className="user-name">{userName}</span>
         </div>
 
@@ -50,40 +54,45 @@ function Navbar({
           onClick={toggleNotificationMenu}
         >
           <img
-            src="/imagenes/notificacion.png"
+            src={notifIcon}
             alt="Notificaciones"
             className="icon-control-img notification-icon-img"
           />
 
           {unreadCount > 0 && (
-            //se usa 'data-count' para que el CSS pueda mostrarlo condicionalmente
-            <span className="notification-badge" data-count={unreadCount}>{unreadCount}</span>
+            <span className="notification-badge" data-count={unreadCount}>
+              {unreadCount}
+            </span>
           )}
 
-          {/* Menú desplegable */}
-          <div className={`dropdown-menu notification-menu ${notifMenuOpen ? 'visible' : ''}`}
-               // Parar la propagación de clics dentro del menú para que no lo cierre
-               onClick={e => e.stopPropagation()} 
+          <div
+            className={`dropdown-menu notification-menu ${
+              notifMenuOpen ? "visible" : ""
+            }`}
+            onClick={(e) => e.stopPropagation()}
           >
-            <p className="dropdown-title">Notificaciones recientes ({unreadCount})</p>
-            
+            <p className="dropdown-title">
+              Notificaciones recientes ({unreadCount})
+            </p>
+
             <div className="notification-list-scrollable">
               {unreadCount > 0 ? (
-                notifications.slice(0, 5).map((notif, index) => ( // Muestra solo las 5 más recientes
-                  <NotificationItem 
+                notifications.slice(0, 5).map((notif, index) => (
+                  <NotificationItem
                     key={index}
-                    message={notif.message || `Notificación de prueba ${index + 1}`}
-                    time={notif.time || `${index + 1}h atrás`} 
+                    message={notif.message || `Notificación ${index + 1}`}
+                    time={notif.time || `${index + 1}h atrás`}
                   />
                 ))
               ) : (
-                <div className="dropdown-item notification-empty">No hay notificaciones nuevas.</div>
+                <div className="dropdown-item notification-empty">
+                  No hay notificaciones nuevas.
+                </div>
               )}
             </div>
-            
-            {/* Opción para Ver Todas las Notificaciones */}
-            <a 
-              href="#" // Usamos <a> para el estilo de enlace, pero se controla con JS
+
+            <a
+              href="#"
               className="dropdown-item view-all"
               onClick={handleViewAllClick}
             >
