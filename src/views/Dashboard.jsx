@@ -4,7 +4,7 @@ import Card from "../components/Card";
 import IndicadorCircular from "../components/IndicadorCircular";
 import GraficaBarrasHorizontal from "../components/GraficaBarrasHorizontal";
 import DashboardFiltros from "../components/DashboardFiltros";
-import ModalDashboard from "../components/ModalDashboard"; 
+import ModalDashboard from "../components/ModalDashboard";
 
 const Dashboard = () => {
   const [anio, setAnio] = useState("2025");
@@ -18,8 +18,9 @@ const Dashboard = () => {
   };
 
   return (
-    <>
-      {/* filtros */}
+    <div className="content-area">
+      
+      {/* FILTROS */}
       <DashboardFiltros
         anio={anio}
         mes={mes}
@@ -30,7 +31,7 @@ const Dashboard = () => {
 
       <div className="dashboard-container">
 
-        {/* CARD IZQUIERDO */}
+        {/* TARJETA IZQUIERDA */}
         <Card title="Indicadores de Desempeño" className="circulos-card">
           <p className="periodo-indicadores">Datos de Marzo 2025</p>
 
@@ -41,7 +42,7 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        {/* CARD DERECHO */}
+        {/* TARJETA DERECHA */}
         <Card title="Correspondencia de Casos" className="barras-card">
           <GraficaBarrasHorizontal onBarClick={() => setModalOpen(true)} />
         </Card>
@@ -53,7 +54,8 @@ const Dashboard = () => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
       />
-    </>
+
+    </div>
   );
 };
 
