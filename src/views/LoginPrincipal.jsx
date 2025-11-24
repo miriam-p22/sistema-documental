@@ -1,63 +1,39 @@
-import React, { Component } from "react";
-import { Navigate } from "react-router-dom"; // Para navegación en clase
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/LoginPrincipal.css";
 
 import CampoInicioSesion from "../components/CampoInicioSesion";
 import VentanaClaveModal from "../components/VentanaClaveModal";
 import RegistroUsuario from "../components/RegistroUsuario";
 
-// Importación de imágenes desde assets
-import fondoInicioSesion from "../assets/fondoInicioSesion.jpg";
-import logoTlahuapan from "../assets/logo_tlahuapan.png";
+import FondoInicioSesion from "../assets/fondoInicioSesion.jpg";
+import LogoTlahuapan from "../assets/logo_tlahuapan.png";
 
-class LoginPrincipal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      usuario: "",
-      password: "",
-      mantenerSesion: false,
-      modalClaveOpen: false,
-      clave: "",
-      mensajeClave: "",
-      registroVisible: false,
-      redirectTo: null, // ruta a redirigir después del login
-    };
+const LoginPrincipal = () => {
+  const [usuario, setUsuario] = useState("");
+  const [password, setPassword] = useState("");
+  const [mantenerSesion, setMantenerSesion] = useState(false);
 
-    // Datos simulados
-    this.usuariosSimulados = [
-      { usuario: "admin", password: "123", ruta: "/usuarios" },
-      { usuario: "user", password: "123", ruta: "/dashboard" },
-    ];
+  const [modalClaveOpen, setModalClaveOpen] = useState(false);
+  const [clave, setClave] = useState("");
+  const [mensajeClave, setMensajeClave] = useState(null);
+  const [registroVisible, setRegistroVisible] = useState(false);
 
-    // Bind
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.toggleMantenerSesion = this.toggleMantenerSesion.bind(this);
-    this.onLogin = this.onLogin.bind(this);
-    this.confirmarClave = this.confirmarClave.bind(this);
-    this.openModalClave = this.openModalClave.bind(this);
-    this.closeModalClave = this.closeModalClave.bind(this);
-    this.closeRegistro = this.closeRegistro.bind(this);
-  }
+  const navigate = useNavigate();
 
-  handleInputChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
+  const usuariosSimulados = [
+    { usuario: "admin", password: "123", ruta: "/usuarios" },
+    { usuario: "user", password: "123", ruta: "/dashboard" },
+  ];
 
-  toggleMantenerSesion() {
-    this.setState((prevState) => ({ mantenerSesion: !prevState.mantenerSesion }));
-  }
-
-  onLogin(e) {
+  const onLogin = (e) => {
     e.preventDefault();
-    const { usuario, password } = this.state;
     if (!usuario || !password) {
       alert("Completa los campos");
       return;
     }
 
-    const encontrado = this.usuariosSimulados.find(
+    const encontrado = usuariosSimulados.find(
       (u) => u.usuario === usuario && u.password === password
     );
 
@@ -66,101 +42,94 @@ class LoginPrincipal extends Component {
       return;
     }
 
-    // Redirigir usando estado
-    this.setState({ redirectTo: encontrado.ruta });
-  }
+    navigate(encontrado.ruta);
+  };
 
-  openModalClave() {
-    this.setState({ modalClaveOpen: true });
-  }
-
-  closeModalClave() {
-    this.setState({ modalClaveOpen: false });
-  }
-
-  confirmarClave() {
-    if (this.state.clave !== "12345") {
-      this.setState({ mensajeClave: "Clave incorrecta" });
+  const confirmarClave = () => {
+    if (clave !== "12345") {
+      setMensajeClave({
+        tipo: "error",
+        texto: "Clave incorrecta, vuelve a intentar",
+      });
       return;
     }
-    this.setState({ mensajeClave: "", modalClaveOpen: false, registroVisible: true });
-  }
 
-  closeRegistro() {
-    this.setState({ registroVisible: false });
-  }
+    setMensajeClave({
+      tipo: "ok",
+      texto: "Clave verificada correctamente",
+    });
 
-  render() {
-    // Redirigir si redirectTo tiene valor
-    if (this.state.redirectTo) {
-      return <Navigate to={this.state.redirectTo} replace />;
-    }
+    setTimeout(() => {
+      setModalClaveOpen(false);
+      setRegistroVisible(true);
+      setClave("");
+      setMensajeClave(null);
+    }, 700);
+  };
 
-    return (
-      <div
-        className="login-principal"
-        style={{
-          backgroundImage: `url(${fondoInicioSesion})`,
-        }}
-      >
-        <div className="login-card">
-          <div className="logo-button" onClick={this.openModalClave}>
-            <img src={logoTlahuapan} alt="Logo" className="logo" />
-          </div>
-
-          <form onSubmit={this.onLogin}>
-            <CampoInicioSesion
-              type="text"
-              name="usuario"
-              value={this.state.usuario}
-              onChange={this.handleInputChange}
-              placeholder="Usuario"
-            />
-            <CampoInicioSesion
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-              placeholder="Contraseña"
-            />
-
-            <button className="btn-login" type="submit">
-              INICIAR SESIÓN
-            </button>
-
-            <div className="checkbox-container">
-              <input
-                type="checkbox"
-                checked={this.state.mantenerSesion}
-                onChange={this.toggleMantenerSesion}
-              />
-              <label>Mantener sesión iniciada</label>
-            </div>
-          </form>
+  return (
+    <div
+      className="login-principal"
+      style={{ backgroundImage: `url(${FondoInicioSesion})` }}
+    >
+      <div className="login-card">
+        <div className="logo-button" onClick={() => setModalClaveOpen(true)}>
+          <img src={LogoTlahuapan} alt="Logo" className="logo" />
         </div>
 
-        {/* Modal de clave */}
-        <VentanaClaveModal
-          isOpen={this.state.modalClaveOpen}
-          onClose={this.closeModalClave}
-          clave={this.state.clave}
-          setClave={(value) => this.setState({ clave: value })}
-          onConfirm={this.confirmarClave}
-          mensaje={this.state.mensajeClave}
-        />
+        <form onSubmit={onLogin}>
+          <CampoInicioSesion
+            type="text"
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)}
+            placeholder="Usuario"
+          />
 
-        {/* RegistroUsuario solo si la clave es correcta */}
-        <RegistroUsuario
-          isOpen={this.state.registroVisible}
-          onClose={this.closeRegistro}
-          onRegister={(data) => {
-            console.log("Usuario registrado:", data);
-            this.closeRegistro();
-          }}
-        />
+          <CampoInicioSesion
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Contraseña"
+          />
+
+          <button className="btn-login" type="submit">
+            INICIAR SESIÓN
+          </button>
+
+          <div className="checkbox-container">
+            <input
+              type="checkbox"
+              checked={mantenerSesion}
+              onChange={() => setMantenerSesion(!mantenerSesion)}
+            />
+            <label>Mantener sesión iniciada</label>
+          </div>
+        </form>
       </div>
-    );
-  }
-}
+
+      <VentanaClaveModal
+        isOpen={modalClaveOpen}
+        onClose={() => {
+          setModalClaveOpen(false);
+          setMensajeClave(null);
+          setClave("");
+        }}
+        clave={clave}
+        setClave={setClave}
+        onConfirm={confirmarClave}
+        mensaje={mensajeClave}
+      />
+
+      <RegistroUsuario
+        isOpen={registroVisible}
+        onClose={() => setRegistroVisible(false)}
+        onRegister={(data) => {
+          console.log("Usuario registrado:", data);
+          setRegistroVisible(false);
+        }}
+      />
+    </div>
+  );
+};
 
 export default LoginPrincipal;

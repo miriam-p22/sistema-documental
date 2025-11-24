@@ -1,4 +1,3 @@
-// src/components/ModalClave.jsx
 import React from "react";
 import "../styles/VentanaClaveIP.css";
 
@@ -18,12 +17,17 @@ const VentanaClaveModal = ({ isOpen, onClose, onConfirm, clave, setClave, mensaj
           onChange={(e) => setClave(e.target.value)}
         />
 
-        {mensaje && <p className="mensaje-error">{mensaje}</p>}
+        {mensaje && (
+          <p className={mensaje.tipo === "ok" ? "msg-ok" : "msg-error"}>
+            {mensaje.texto}
+          </p>
+        )}
 
         <div className="modal-buttons">
           <button className="modal-btn confirmar" onClick={onConfirm}>
             Confirmar
           </button>
+
           <button className="modal-btn cancelar" onClick={onClose}>
             Cancelar
           </button>
