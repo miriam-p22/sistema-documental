@@ -19,3 +19,28 @@
   outline: none;
   border-color: #555b5b;
 }
+
+/*ICONO DEL OJITO*/
+.campo-reutilizable {
+position: relative;
+}
+
+.input-reutilizable {
+width: 100%;
+padding: 12px 45px 12px 12px;
+font-size: 15px;
+border: 1px solid #c7c7c7;
+border-radius: 8px;
+outline: none;
+}
+
+.password-icon {
+position: absolute;
+right: 40px;     /* Ajústalo para moverlo */
+top: 50%;
+transform: translateY(-50%);
+cursor: pointer;
+font-size: 1.2em;
+color: #555;
+}
+

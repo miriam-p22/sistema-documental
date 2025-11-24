@@ -1,4 +1,3 @@
-// src/components/Layout.jsx (CORREGIDO)
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import "../styles/Layout.css";

@@ -40,3 +40,27 @@ select.input {
     background-size: 15px;
     padding-right: 30px; /* Espacio para el icono de flecha */
 }
+
+/*ESTILO PARA EL ICONO DEL OJITO PARA CONTRASENIAS*/
+.field {
+position: relative;
+display: block;
+}
+
+.input {
+width: 100%;
+padding: 12px 45px 12px 12px;
+border-radius: 8px;
+border: 1px solid #ccc;
+font-size: 15px;
+}
+
+.password-icon-formulario {
+position: absolute;
+right: 10px;        /* Ajusta aquí */
+top: 75%;
+transform: translateY(-75%);
+cursor: pointer;
+font-size: 1.2em;
+color: #555;
+}
