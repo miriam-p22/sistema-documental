@@ -7,8 +7,9 @@ import Dashboard from "./views/Dashboard";
 import Dispersion from "./views/Dispersion";
 import Organigrama from "./views/Organigrama";
 import Documentos from "./views/Documentos";
-import Configuracion from "./views/Configuracion";
 import LeyArchivo from "./views/LeyArchivo";
+import NotificacionConexionBD from "./views/NotificacionConexionBD";
+import DireccionesIp from "./views/DireccionesIP";
 
 import "./App.css";
 
@@ -26,7 +27,8 @@ function App() {
           <Route path="organigrama" element={<Organigrama />} />
           <Route path="Documentos" element={<Documentos />} />
           <Route path="LeyArchivo" element={<LeyArchivo />} />
-          <Route path="Configuracion" element={<Configuracion />} />
+          <Route path="/config/notificacion-conexion" element={<NotificacionConexionBD />} />
+           <Route path="/config/direcciones-ip" element={<DireccionesIp />} />
         </Route>
 
       </Routes>

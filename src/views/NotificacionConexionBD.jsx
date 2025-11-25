@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Card from "../components/Card";
 import CampoFormulario from "../components/CampoFormulario";
 import BotonReutilizable from "../components/BotonReutilizable";
-import '../styles/Configuracion.css';
+import '../styles/NotificacionConexionBD.css';
 
 const Configuracion = () => {
   // Estado correo
@@ -62,7 +62,7 @@ const Configuracion = () => {
               onChange={(e) => setPuerto(e.target.value)}
             />
             <div className="row">
-              <BotonReutilizable onClick={enviarCorreo}>Enviar</BotonReutilizable>
+              <BotonReutilizable onClick={enviarCorreo}>Guardar</BotonReutilizable>
             </div>
           </Card>
 
@@ -80,6 +80,12 @@ const Configuracion = () => {
               placeholder="MySQL"
               value={servicio}
               onChange={(e) => setServicio(e.target.value)}
+            />
+             <CampoFormulario
+              label="Puerto"
+              placeholder=" "
+              value={puerto}
+              onChange={(e) => setPuerto(e.target.value)}
             />
             <CampoFormulario
               label="Base de Datos"
@@ -101,7 +107,7 @@ const Configuracion = () => {
               onChange={(e) => setContrasena(e.target.value)}
             />
             <div className="row">
-              <BotonReutilizable onClick={aceptarBaseDatos}>Aceptar</BotonReutilizable>
+              <BotonReutilizable onClick={aceptarBaseDatos}>Guardar</BotonReutilizable>
             </div>
           </Card>
         </div>

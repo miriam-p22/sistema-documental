@@ -6,7 +6,16 @@
     z-index: 11;
     transition: width 0.25s ease, 0.25s ease;
     flex-shrink: 0;
+/* SCROLL INTERNO*/
+    overflow-y: auto;     /* ACTIVO SCROLL VERTICAL */
+    overflow-x: hidden;
+    scrollbar-width: none;   
 }
+/* Oculta scroll  */
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+/* FIN */
 
 /* Quitar subrayado de los enlaces*/
 a {
@@ -191,4 +200,33 @@ a {
 /* Quita el margen derecho del contenedor del ícono */
 .sidebar.collapsed .nav-item .nav-link .icon-bg {
     margin-right: 0; 
+}
+
+/*SUBMENU*/
+.sidebar .submenu {
+  margin-left: 55px;       /* indenta el submenu */
+  margin-top: 5px;
+  list-style: none;
+  padding-left: 0;
+
+/* SCROLL INTERNO */
+   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;  /* Ocultar scroll  */
+}
+/* Ocultar scroll */
+.submenu::-webkit-scrollbar {
+  display: none;
+}
+
+
+.sidebar .submenu-item .nav-link {
+  font-size: 16px;
+  color: #444;
+  padding: 6px 8px;
+}
+
+.sidebar .submenu-item.active .nav-link {
+  color: #fffffe;
+  border-radius: 4px;
 }
