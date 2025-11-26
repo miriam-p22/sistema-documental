@@ -11,7 +11,7 @@ async function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    maximizable: false, //desactiva el boton de maximizar
+    maximizable: true, //desactiva el boton de maximizar
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
