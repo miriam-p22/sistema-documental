@@ -5,8 +5,10 @@ import "../styles/BarraNavegacion.css";
 import menuIcon from "../assets/menu.png";
 import userIcon from "../assets/usuario.png";
 import notifIcon from "../assets/notificacion.png";
+import IconoIP from "../assets/ip.png";
+import IconoGrupo from "../assets/grupotlahuapan.png";
 
-// Componente para una notificación individual (usado internamente)
+// Componente para cada notificación
 const NotificationItem = ({ message, time }) => (
   <div className="notification-item">
     <p className="notification-message">{message}</p>
@@ -20,8 +22,12 @@ function Navbar({
   notifications = [],
   notifMenuOpen,
   toggleNotificationMenu,
-  onViewAllNotifications
+  onViewAllNotifications,
+  notificationsRead,
+  ipAddress,
+  groupName
 }) {
+
   const unreadCount = notifications.length;
 
   const handleViewAllClick = (e) => {
@@ -33,6 +39,8 @@ function Navbar({
 
   return (
     <header className="navbar">
+
+      {/* MENU */}
       <div className="header-left-group">
         <img
           src={menuIcon}
@@ -43,12 +51,28 @@ function Navbar({
         />
       </div>
 
+      {/* CENTRO: IP + GRUPO */}
+      <div className="center-items">
+        <div className="right-item">
+          <img src={IconoIP} alt="IP" className="icon-control-img" />
+          <span>{ipAddress}</span>
+        </div>
+
+        <div className="right-item">
+          <img src={IconoGrupo} alt="Grupo" className="icon-control-img" />
+          <span>{groupName}</span>
+        </div>
+      </div>
+
+      {/* USUARIO + NOTIFICACIONES */}
       <div className="user-info">
+
         <div className="profile-info-container">
           <img src={userIcon} alt="Usuario" className="icon-control-img" />
           <span className="user-name">{userName}</span>
         </div>
 
+        {/* NOTIFICACIONES */}
         <div
           className="notification-dropdown-container"
           onClick={toggleNotificationMenu}
@@ -59,12 +83,12 @@ function Navbar({
             className="icon-control-img notification-icon-img"
           />
 
-          {unreadCount > 0 && (
-            <span className="notification-badge" data-count={unreadCount}>
-              {unreadCount}
-            </span>
-          )}
+          {/* BADGE — solo si hay nuevas notificaciones y no está leído */}
+         {unreadCount > 0 && !notifMenuOpen && !notificationsRead && (
+  <span className="notification-badge">{unreadCount}</span>
+)}
 
+          {/* MENÚ DESPLEGABLE */}
           <div
             className={`dropdown-menu notification-menu ${
               notifMenuOpen ? "visible" : ""
@@ -80,8 +104,8 @@ function Navbar({
                 notifications.slice(0, 5).map((notif, index) => (
                   <NotificationItem
                     key={index}
-                    message={notif.message || `Notificación ${index + 1}`}
-                    time={notif.time || `${index + 1}h atrás`}
+                    message={notif.message}
+                    time={notif.time}
                   />
                 ))
               ) : (

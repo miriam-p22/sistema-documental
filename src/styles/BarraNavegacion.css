@@ -35,6 +35,21 @@
     vertical-align: middle;
 }
 
+/* Contenedor del centro */
+.center-items {
+    display: flex;
+    align-items: center;
+    gap: 14px; /* Más o menos espacio */
+    margin-left: auto;  /* Empuja grupo + IP hacia la derecha */
+}
+
+/* Elementos IP y Grupo */
+.right-item {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Espacio entre icono y texto */
+}
+
 /* Usuario */
 .user-info {
     display: flex;
