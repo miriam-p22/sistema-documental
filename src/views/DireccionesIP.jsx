@@ -8,10 +8,14 @@ import "../styles/DireccionesIP.css";
 const DireccionesIp = () => {
   const [ips, setIps] = useState([
     { id: 1, adscripcion: "Ley de Archivo", ip: "192.168.1.10" },
-    { id: 2, adscripcion: "Cultura y Turismo", ip: "192.168.1.10" },
-    { id: 3, adscripcion: "Oficialía de Partes", ip: "192.168.1.11" },
-    { id: 4, adscripcion: "Obras Públicas", ip: "192.168.1.12" },
-    { id: 5, adscripcion: "Finanzas", ip: "192.168.1.13" },
+    { id: 2, adscripcion: "Cultura y Turismo", ip: "192.168.1.11" },
+    { id: 3, adscripcion: "Oficialía de Partes", ip: "192.168.1.50" },
+    { id: 4, adscripcion: "Obras Públicas", ip: "192.168.1.75" },
+    { id: 5, adscripcion: "Contraloría", ip: "192.168.0.20" },
+    { id: 6, adscripcion: "Planeación y Desarrollo", ip: "192.168.2.1" },
+    { id: 7, adscripcion: "Servicios Públicos", ip: "192.168.1.16" },
+    { id: 8, adscripcion: "Secretaría del Ayuntamiento", ip: "192.168.1.100" },
+    { id: 9, adscripcion: "Tesorería", ip: "192.168.0.1" },
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
