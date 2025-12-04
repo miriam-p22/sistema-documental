@@ -1,0 +1,19 @@
+// 1. Configuración de la Fuente de Datos
+datasource db {
+  provider = "mysql" 
+}
+
+// 2. Configuración del Cliente que usarás en Express
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 3. Primer Modelo (Tabla de la base de datos)
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+

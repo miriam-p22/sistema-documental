@@ -5,10 +5,14 @@
   "main": "main.js",
   "homepage": "./",
   "dependencies": {
+    "@prisma/client": "^7.0.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "node-fetch": "^3.3.2",
     "node-firebird": "^1.1.9",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -34,6 +38,7 @@
     "electron-builder": "^24.13.3",
     "electron-is-dev": "^3.0.1",
     "electron-rebuild": "^3.2.9",
+    "prisma": "^7.0.1",
     "wait-on": "^7.2.0"
   },
   "build": {
