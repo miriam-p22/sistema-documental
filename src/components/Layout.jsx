@@ -1,55 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import "../styles/Layout.css";
 import Sidebar from "./MenuLateral";
 import Navbar from "./BarraNavegacion";
 
 const Layout = () => {
-  // 1. Estado para controlar si el Sidebar está abierto
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isNotifMenuOpen, setIsNotifMenuOpen] = useState(false);
 
-  // 2. Estado para controlar si el MENÚ DE NOTIFICACIONES está abierto
-  const [isNotifMenuOpen, setIsNotifMenuOpen] = useState(false); 
+  // Notificaciones leídas
+  const [notificationsRead, setNotificationsRead] = useState(false);
 
-  // 3. Función para alternar el estado del Sidebar
+  // NOTIFICACIONES SIMULADAS (luego vendrán de API)
+  const [notifications, setNotifications] = useState([
+    { message: "Solicitud pendiente de aprobación", time: "2h" },
+    { message: "El reporte diario está listo.", time: "4h" },
+    { message: "Nueva tarea asignada por Admin.", time: "1d" },
+  ]);
+
+  // Cuando se abre el menú → marcar como leídas
+  const toggleNotificationMenu = () => {
+    setIsNotifMenuOpen(prev => {
+      const newState = !prev;
+
+      if (newState === true) {
+        setNotificationsRead(true);
+      }
+
+      return newState;
+    });
+  };
+
+  // Si llegan nuevas notificaciones → bolita vuelve a aparecer
+  useEffect(() => {
+    if (notifications.length > 0) {
+      setNotificationsRead(false);
+    }
+  }, [notifications]);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
   };
-  
-  // 4. Función para alternar el estado del Menú de Notificaciones
-  const toggleNotificationMenu = () => { 
-    setIsNotifMenuOpen(prev => !prev);
-  };
-
-  // Función  para ver todas las notificaciones (Necesaria para Navbar)
-  const handleViewAllNotifications = () => {
-      console.log("Navegando a la pantalla de todas las notificaciones...");
-      // Aquí se podrías usar navigate('/notifications'); si se usa react-router-dom
-  };
-  
-  // Datos para el ejemplo
-  const mockNotifications = [
-      { message: "Solicitud pendiente de aprobación", time: "2h" },
-      { message: "El reporte diario está listo.", time: "4h" },
-      { message: "Nueva tarea asignada por Admin.", time: "1d" },
-  ];
 
   return (
-    <div className={`layout-container ${!isSidebarOpen ? 'sidebar-collapsed' : ''}`}>
-
+    <div className={`layout-container ${!isSidebarOpen ? "sidebar-collapsed" : ""}`}>
       <Sidebar isOpen={isSidebarOpen} />
 
       <div className="main-area">
-        {/* 5. PASAR EL ESTADO Y EL TOGGLE A LA NAVBAR */}
-        <Navbar 
-          onToggleSidebar={toggleSidebar} 
+        <Navbar
+          onToggleSidebar={toggleSidebar}
           userName="Usuario Ejemplo"
-          notifications={mockNotifications} // Pasar el array de notificaciones
+          ipAddress="192.168.0.5"
+          groupName="grupotlahuapan"
           
-          // PROPS CRUCIALES PARA EL DROPDOWN DE NOTIFICACIONES
+          notifications={notifications}
           notifMenuOpen={isNotifMenuOpen}
           toggleNotificationMenu={toggleNotificationMenu}
-          onViewAllNotifications={handleViewAllNotifications}
+          notificationsRead={notificationsRead}
         />
 
         <main className="content-wrapper">

@@ -16,3 +16,7 @@ model User {
   createdAt DateTime @default(now())
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 71ea84577000c68237a37a37f554a9c205a144d2
