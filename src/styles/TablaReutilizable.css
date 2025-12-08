@@ -58,3 +58,35 @@ table tr.selected-row {
     border-left: 5px solid #a17a4a;
     cursor: default;
 }
+.toolbar-container {
+  margin-bottom: 20px;   /* separa el buscador de la tabla */
+}
+
+/* Estilos para colores del semaforo*/
+.tiempo-respuesta-cell {
+  text-align: center;
+}
+
+/* Círculo */
+.semaforo {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 6px;        
+  border: 1px solid #999;  
+}
+
+/* Colores del semáforo */
+.semaforo-verde {
+  background-color: #28a745;
+}
+
+.semaforo-amarillo {
+  background-color: #ffc107;
+}
+
+.semaforo-rojo {
+  background-color: #dc3545;
+}
+

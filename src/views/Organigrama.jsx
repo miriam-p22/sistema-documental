@@ -1,37 +1,74 @@
-// src/views/Organigrama.jsx
 import React, { Component } from "react";
-import "../styles/Organigrama.css";
-
 import Card from "../components/Card";
 import TablaReutilizable from "../components/TablaReutilizable";
 import FiltroBusqueda from "../components/FiltroBusqueda";
 import BotonReutilizable from "../components/BotonReutilizable";
 import ModalReutilizable from "../components/ModalReutilizable";
 import CampoFormulario from "../components/CampoFormulario";
+import ArbolOrganigrama from "../components/ArbolOrganigrama";
 
-// ---------------- DATOS SIMULADOS ----------------
+// Datos simulados
 const organigramasMock = [
-  { id: 1, titulo: "Organigrama 2024–2027", autorizacion: "Pendiente", caducidad: "Pendiente" },
-  { id: 2, titulo: "Organigrama 2021–2024", autorizacion: "10-08-2021", caducidad: "10-08-2024" },
-  { id: 3, titulo: "Organigrama 2018–2021", autorizacion: "15-07-2018", caducidad: "15-07-2021" },
-  { id: 4, titulo: "Organigrama 2015–2018", autorizacion: "01-07-2015", caducidad: "01-07-2018" },
+  {
+    id: 1,
+    titulo: "Organigrama 2024–2027",
+    fechaSolicitud: "05-01-2025",
+    fechaAutorizacion: "Pendiente",
+  },
+  {
+    id: 2,
+    titulo: "Organigrama 2021–2024",
+    fechaSolicitud: "01-06-2021",
+    fechaAutorizacion: "10-08-2021",
+  },
+  {
+    id: 3,
+    titulo: "Organigrama 2018–2021",
+    fechaSolicitud: "10-05-2018",
+    fechaAutorizacion: "15-07-2018",
+  },
+  {
+    id: 4,
+    titulo: "Organigrama 2015–2018",
+    fechaSolicitud: "15-04-2015",
+    fechaAutorizacion: "01-07-2015",
+  },
 ];
 
 const areasMock = [
+  // Simulacion de datos para mostrar organigrama
   { area: "Presidencia Municipal", nivel: 1, superior: "-" },
-  { area: "H. Cabildo", nivel: 1, superior: "Presidencia Municipal" },
-  { area: "Contraloría Municipal", nivel: 2, superior: "Presidencia Municipal" },
-  { area: "Tesorería Municipal", nivel: 2, superior: "Presidencia Municipal" },
-  { area: "Secretaría del Ayuntamiento", nivel: 2, superior: "Presidencia Municipal" },
-  { area: "Secretaría Técnica", nivel: 2, superior: "Presidencia Municipal" },
-  { area: "Dirección de Obras Públicas", nivel: 3, superior: "Secretaría Técnica" },
-  { area: "Dirección de Desarrollo Urbano", nivel: 3, superior: "Secretaría Técnica" },
-  { area: "Dirección de Cultura y Deporte", nivel: 3, superior: "Secretaría del Ayuntamiento" },
-  { area: "Dirección de Desarrollo Social", nivel: 3, superior: "Secretaría Técnica" },
-  { area: "Dirección de Protección Civil", nivel: 3, superior: "Secretaría Técnica" },
-  { area: "Jefatura de Archivo y Control Documental", nivel: 4, superior: "Secretaría del Ayuntamiento" },
-  { area: "Jefatura de Informática y Sistemas", nivel: 4, superior: "Secretaría Técnica" },
-  { area: "Coordinación de Igualdad de Género", nivel: 4, superior: "Secretaría Técnica" },
+  {
+    area: "Dirección de Obras Públicas",
+    nivel: 2,
+    superior: "Presidencia Municipal",
+  },
+  {
+    area: "Dirección de Desarrollo Urbano",
+    nivel: 2,
+    superior: "Presidencia Municipal",
+  },
+  {
+    area: "Dirección de Desarrollo Social",
+    nivel: 2,
+    superior: "Presidencia Municipal",
+  },
+  {
+    area: "Dirección de Cultura y Deporte",
+    nivel: 2,
+    superior: "Presidencia Municipal",
+  },
+
+  {
+    area: "Coordinación de Programas Sociales",
+    nivel: 3,
+    superior: "Dirección de Desarrollo Social",
+  },
+  {
+    area: "Departamento de Atención Ciudadana",
+    nivel: 3,
+    superior: "Dirección de Desarrollo Social",
+  },
 ];
 
 class Organigrama extends Component {
@@ -44,6 +81,8 @@ class Organigrama extends Component {
 
       searchQuery: "",
       selectedOrg: null,
+
+      mostrarGestion: false,
 
       // Modales
       isModalCrearOpen: false,
@@ -60,9 +99,9 @@ class Organigrama extends Component {
 
     this.renderOrganigramaRow = this.renderOrganigramaRow.bind(this);
     this.renderAreaRow = this.renderAreaRow.bind(this);
+    this.gestionOrganizacionalRef = React.createRef();
   }
 
-  // ----------------- FILTRO -----------------
   setSearchQuery(value) {
     this.setState({ searchQuery: value });
   }
@@ -70,12 +109,12 @@ class Organigrama extends Component {
   getFilteredOrganigramas() {
     const { organigramas, searchQuery } = this.state;
 
-    return organigramas.filter(o =>
+    return organigramas.filter((o) =>
       o.titulo.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }
 
-  // ----------------- ACCIONES -----------------
+  //Acciones
   abrirCrear() {
     this.setState({ nuevoTitulo: "", isModalCrearOpen: true });
   }
@@ -93,7 +132,18 @@ class Organigrama extends Component {
       nuevaArea: "",
       nuevoNivel: "",
       nuevaSuperior: "",
-      isModalInsertarAreaOpen: true
+      isModalInsertarAreaOpen: true,
+    });
+  }
+
+  irAGestion(org) {
+    this.setState({ selectedOrg: org }, () => {
+      if (this.gestionOrganizacionalRef.current) {
+        this.gestionOrganizacionalRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
     });
   }
 
@@ -101,13 +151,13 @@ class Organigrama extends Component {
     const newOrg = {
       id: Date.now(),
       titulo: this.state.nuevoTitulo,
-      autorizacion: "Pendiente",
-      caducidad: "Pendiente"
+      fechaSolicitud: "Pendiente",
+      fechaAutorizacion: "Pendiente",
     };
 
-    this.setState(prev => ({
+    this.setState((prev) => ({
       organigramas: [...prev.organigramas, newOrg],
-      isModalCrearOpen: false
+      isModalCrearOpen: false,
     }));
   }
 
@@ -119,52 +169,52 @@ class Organigrama extends Component {
     const nueva = {
       area: this.state.nuevaArea,
       nivel: this.state.nuevoNivel,
-      superior: this.state.nuevaSuperior
+      superior: this.state.nuevaSuperior,
     };
 
-    this.setState(prev => ({
+    this.setState((prev) => ({
       gestionAreas: [...prev.gestionAreas, nueva],
-      isModalInsertarAreaOpen: false
+      isModalInsertarAreaOpen: false,
     }));
   }
 
-  // ----------------- TABLA ORGANIGRAMAS -----------------
   renderOrganigramaRow(org) {
-    const autorizado = org.autorizacion !== "Pendiente";
+    const autorizado =
+      org.fechaAutorizacion && org.fechaAutorizacion !== "Pendiente";
 
     return (
       <tr key={org.id}>
         <td>{org.titulo}</td>
-        <td>{org.autorizacion}</td>
-        <td>{org.caducidad}</td>
+        <td>{org.fechaSolicitud}</td>
+        <td>{org.fechaAutorizacion}</td>
 
         <td>
           <div className="actions-cell">
-
-            {/* SI NO ESTÁ AUTORIZADO -> MOSTRAR EDITAR */}
             {!autorizado && (
               <BotonReutilizable
                 className="btn-action edit"
-                onClick={() => this.abrirCrear(org)}
+                onClick={() => {
+                  this.setState({ selectedOrg: org, mostrarGestion: true });
+                }}
               >
                 Editar
               </BotonReutilizable>
             )}
-
-            {/* SIEMPRE MOSTRAR VER */}
-            <BotonReutilizable
-              className="btn-action status-active"
-              onClick={() => this.abrirVer(org)}
-            >
-              Ver
-            </BotonReutilizable>
+            {autorizado && (
+              <BotonReutilizable
+                className="btn-action status-active"
+                onClick={() => this.abrirVer(org)}
+              >
+                Ver
+              </BotonReutilizable>
+            )}
           </div>
         </td>
       </tr>
     );
   }
 
-  // ----------------- TABLA GESTIÓN DE ÁREAS -----------------
+  // Tabla gestion areas
   renderAreaRow(area, index) {
     return (
       <tr key={index}>
@@ -175,7 +225,6 @@ class Organigrama extends Component {
     );
   }
 
-  // ----------------- VISTA -----------------
   render() {
     const { selectedOrg } = this.state;
 
@@ -196,41 +245,47 @@ class Organigrama extends Component {
             <TablaReutilizable
               columns={[
                 "Título del Organigrama",
+                "Fecha de solicitud",
                 "Fecha de autorización",
-                "Fecha de caducidad",
-                "Acciones"
+                "Acciones",
               ]}
               data={this.getFilteredOrganigramas()}
               renderRow={(item) => this.renderOrganigramaRow(item)}
             />
           </Card>
 
-          {/* --------- SECCIÓN GESTIÓN ORGANIZACIONAL --------- */}
-          <h2 className="card-title">Gestión organizacional</h2>
+          {/* Gestion organizacional */}
+          {this.state.mostrarGestion && (
+            <>
+              <h2 className="card-title" ref={this.gestionOrganizacionalRef}>
+                Gestión organizacional
+              </h2>
 
-          <div className="management-buttons-container">
-            <BotonReutilizable onClick={() => this.abrirInsertarArea()}>
-              Agregar áreas
-            </BotonReutilizable>
+              <div className="management-buttons-container">
+                <BotonReutilizable onClick={() => this.abrirInsertarArea()}>
+                  Agregar áreas
+                </BotonReutilizable>
 
-            <BotonReutilizable
-              className="status-active"
-              onClick={() => this.abrirAutorizar()}
-            >
-              Autorizar Organigrama
-            </BotonReutilizable>
-          </div>
+                <BotonReutilizable
+                  className="status-active"
+                  onClick={() => this.abrirAutorizar()}
+                >
+                  Autorizar Organigrama
+                </BotonReutilizable>
+              </div>
 
-          <Card>
-            <TablaReutilizable
-              columns={["Área", "Nivel", "Área superior"]}
-              data={this.state.gestionAreas}
-              renderRow={(item, index) => this.renderAreaRow(item, index)}
-            />
-          </Card>
+              <Card>
+                <TablaReutilizable
+                  columns={["Área", "Nivel", "Área superior"]}
+                  data={this.state.gestionAreas}
+                  renderRow={(item, index) => this.renderAreaRow(item, index)}
+                />
+              </Card>
+            </>
+          )}
         </section>
 
-        {/* ---------------- MODAL CREAR ---------------- */}
+        {/* Modal crear nueva version  */}
         <ModalReutilizable
           title="Nueva versión de organigrama"
           isOpen={this.state.isModalCrearOpen}
@@ -246,28 +301,23 @@ class Organigrama extends Component {
           />
         </ModalReutilizable>
 
-        {/* ---------------- MODAL VER CON ORGANIGRAMA VISUAL ---------------- */}
+        {/* Modal ver organigrama autorizado*/}
         <ModalReutilizable
-          title="Organigrama Autorizado"
+          title="Organigrama autorizado"
           isOpen={this.state.isModalVerOpen}
           onClose={() => this.setState({ isModalVerOpen: false })}
           onAccept={() => this.setState({ isModalVerOpen: false })}
           acceptButtonText="Cerrar"
+          className="modal-organigrama"
         >
           <div className="organigrama-visual-container">
-            <img
-              src="/imagenes/organigrama_demo.png"
-              alt="Organigrama"
-              style={{
-                width: "100%",
-                objectFit: "contain",
-                borderRadius: "8px"
-              }}
-            />
+            <div className="organigrama-scroll-x">
+              <ArbolOrganigrama areas={this.state.gestionAreas} />
+            </div>
           </div>
         </ModalReutilizable>
 
-        {/* ---------------- MODAL AUTORIZAR ---------------- */}
+        {/* Modal solicitar autorizacion */}
         <ModalReutilizable
           title="Autorizar organigrama"
           isOpen={this.state.isModalAutorizarOpen}
@@ -278,7 +328,7 @@ class Organigrama extends Component {
           <p>¿Desea solicitar la autorización del organigrama actual?</p>
         </ModalReutilizable>
 
-        {/* ---------------- MODAL INSERTAR ÁREA ---------------- */}
+        {/* Modal agregar areas */}
         <ModalReutilizable
           title="Agregar área"
           isOpen={this.state.isModalInsertarAreaOpen}
@@ -307,7 +357,6 @@ class Organigrama extends Component {
             placeholder="Presidencia Municipal"
           />
         </ModalReutilizable>
-
       </main>
     );
   }

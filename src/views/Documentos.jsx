@@ -10,7 +10,7 @@ import ModalReutilizable from "../components/ModalReutilizable";
 import VisorDocumento from "../components/VisorDocumento";
 import CampoFormulario from "../components/CampoFormulario";
 
-// ---------------- DATOS SIMULADOS ----------------
+// Datos simulados
 const initialDocs = [
   {
     id: 1,
@@ -18,8 +18,8 @@ const initialDocs = [
     titulo: "Acta constitutiva",
     estado: "Recibido",
     fechaLimite: "2025-11-10",
-    tiempo: "2 días",
-    archivo: "acta.pdf"
+    tiempo: "5 días",
+    archivo: "acta.pdf",
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ const initialDocs = [
     estado: "Recibido",
     fechaLimite: "2025-11-03",
     tiempo: "Vencido",
-    archivo: "reporte2024.pdf"
+    archivo: "reporte2024.pdf",
   },
   {
     id: 3,
@@ -37,12 +37,11 @@ const initialDocs = [
     estado: "Pendiente",
     fechaLimite: "2025-10-25",
     tiempo: "1 día",
-    archivo: "presidencia.pdf"
+    archivo: "presidencia.pdf",
   },
 ];
 
 class Documentos extends Component {
-
   constructor(props) {
     super(props);
 
@@ -56,7 +55,6 @@ class Documentos extends Component {
       isModalEstadoOpen: false,
       isModalRespuestaOpen: false,
 
-      // Formulario Respuesta
       comentarioRespuesta: "",
       estadoSeleccionado: "Recibido",
     };
@@ -64,18 +62,41 @@ class Documentos extends Component {
     this.renderRow = this.renderRow.bind(this);
   }
 
-  // ------------------ FILTROS ------------------
-  
+  // Semaforo
+  getSemaforoColor(doc) {
+    const tiempo = (doc.tiempo || "").toLowerCase().trim();
+
+    // vencido = rojo
+    if (tiempo.includes("vencid")) {
+      return "rojo";
+    }
+
+    // Extrae dias para ver si esta en tiempo
+    const match = tiempo.match(/\d+/);
+    if (!match) {
+      return "verde";
+    }
+
+    const dias = parseInt(match[0], 10);
+    if (dias > 2) {
+      return "verde";
+    } else if (dias >= 1) {
+      return "amarillo";
+    } else {
+      return "rojo";
+    }
+  }
+
   setSearchQuery(value) {
     this.setState({ searchQuery: value });
   }
 
-  // ------------------ ACCIONES ------------------
+  // Acciones
 
   abrirVer(doc) {
     this.setState({
       selectedDoc: doc,
-      isModalVerOpen: true
+      isModalVerOpen: true,
     });
   }
 
@@ -83,7 +104,7 @@ class Documentos extends Component {
     this.setState({
       selectedDoc: doc,
       estadoSeleccionado: doc.estado,
-      isModalEstadoOpen: true
+      isModalEstadoOpen: true,
     });
   }
 
@@ -91,48 +112,58 @@ class Documentos extends Component {
     this.setState({
       selectedDoc: doc,
       comentarioRespuesta: "",
-      isModalRespuestaOpen: true
+      isModalRespuestaOpen: true,
     });
   }
 
   cambiarEstadoDocumento() {
-    this.setState(prev => ({
-      documentos: prev.documentos.map(d =>
+    this.setState((prev) => ({
+      documentos: prev.documentos.map((d) =>
         d.id === prev.selectedDoc.id
           ? { ...d, estado: prev.estadoSeleccionado }
           : d
       ),
-      isModalEstadoOpen: false
+      isModalEstadoOpen: false,
     }));
   }
 
   enviarRespuesta() {
     console.log("Documento respondido:", {
       documento: this.state.selectedDoc,
-      comentario: this.state.comentarioRespuesta
+      comentario: this.state.comentarioRespuesta,
     });
 
     this.setState({ isModalRespuestaOpen: false });
   }
 
-  // ------------------ FILTROS ------------------
   getFilteredDocs() {
     const { documentos, searchQuery } = this.state;
 
-    return documentos.filter(doc =>
-      doc.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.numOficio.toLowerCase().includes(searchQuery.toLowerCase())
+    return documentos.filter(
+      (doc) =>
+        doc.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.numOficio.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }
 
-  // ------------------ TABLA: FILAS PERSONALIZADAS ------------------
   renderRow(doc) {
+    const colorSemaforo = this.getSemaforoColor(doc);
+
     return (
       <tr key={doc.id}>
         <td>{doc.numOficio}</td>
         <td>{doc.titulo}</td>
-        <td><EtiquetaEstado estatus={doc.estado} /></td>
-        <td>{doc.tiempo}</td>
+        <td>
+          <EtiquetaEstado estatus={doc.estado} />
+        </td>
+
+        {/* Semaforo en tabla*/}
+        <td className="tiempo-respuesta-cell">
+          <span>{doc.tiempo}</span>
+          <span
+            className={`semaforo semaforo-${this.getSemaforoColor(doc)}`}
+          ></span>
+        </td>
 
         <td>
           <div className="actions-cell">
@@ -162,7 +193,6 @@ class Documentos extends Component {
     );
   }
 
-  // ------------------ RENDER ------------------
   render() {
     const { selectedDoc } = this.state;
 
@@ -172,8 +202,6 @@ class Documentos extends Component {
           <h2 className="card-title">Gestión Documental</h2>
 
           <Card className="table-component">
-
-            {/* BUSCADOR */}
             <div className="toolbar-container">
               <FiltroBusqueda
                 value={this.state.searchQuery}
@@ -194,11 +222,10 @@ class Documentos extends Component {
               data={this.getFilteredDocs()}
               renderRow={this.renderRow}
             />
-
           </Card>
         </section>
 
-        {/* ---------------- MODAL VER ---------------- */}
+        {/* Modal Visualización documento*/}
         <ModalReutilizable
           title="Visualización del documento"
           isOpen={this.state.isModalVerOpen}
@@ -212,7 +239,7 @@ class Documentos extends Component {
           />
         </ModalReutilizable>
 
-        {/* ---------------- MODAL ESTADO ---------------- */}
+        {/* Modal Cambiar estado del documento */}
         <ModalReutilizable
           title="Cambiar estado del documento"
           isOpen={this.state.isModalEstadoOpen}
@@ -224,15 +251,16 @@ class Documentos extends Component {
             label="Estado del documento"
             isSelect
             value={this.state.estadoSeleccionado}
-            onChange={(e) => this.setState({ estadoSeleccionado: e.target.value })}
+            onChange={(e) =>
+              this.setState({ estadoSeleccionado: e.target.value })
+            }
           >
             <option value="Recibido">Recibido</option>
-            <option value="Pendiente">Pendiente</option>
             <option value="Devuelto">Devuelto</option>
           </CampoFormulario>
         </ModalReutilizable>
 
-        {/* ---------------- MODAL RESPUESTA ---------------- */}
+        {/* Modal enviar respuesta*/}
         <ModalReutilizable
           title="Entregar respuesta"
           isOpen={this.state.isModalRespuestaOpen}
@@ -240,17 +268,10 @@ class Documentos extends Component {
           onAccept={() => this.enviarRespuesta()}
           acceptButtonText="Enviar"
         >
-          <p><strong>Fecha de envío:</strong> {new Date().toLocaleDateString()}</p>
-
-          <CampoFormulario
-            label="Comentario (opcional)"
-            type="text"
-            value={this.state.comentarioRespuesta}
-            onChange={(e) => this.setState({ comentarioRespuesta: e.target.value })}
-            placeholder="Agrega un comentario..."
-          />
+          <p>
+            <strong>Fecha de envío:</strong> {new Date().toLocaleDateString()}
+          </p>
         </ModalReutilizable>
-
       </main>
     );
   }

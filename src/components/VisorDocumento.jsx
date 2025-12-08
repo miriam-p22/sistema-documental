@@ -1,32 +1,30 @@
-import React from 'react';
-import '../styles/VisorDocumento.css';
+import React, { Component } from "react";
+import ReticulaPdf from "../assets/Reticula.pdf"; // <- tu archivo simulador
 
-const VisorDocumento = ({ documentUrl, documentTitle }) => {
-  // Define el contenido que mostrará el iframe si no hay documento seleccionado
-  const initialMessage = `
-    <style>
-        .initial-message { 
-            font-family: Arial, sans-serif; 
-            color: #6c757d; 
-            padding: 20px; 
-            text-align: center;
-            margin-top: 50px;
-        }
-    </style>
-    <p class='initial-message'>Selecciona un documento de la tabla para previsualizarlo aquí.</p>
-  `;
+class VisorDocumento extends Component {
+  render() {
+    const { documentTitle } = this.props;
+    const url = ReticulaPdf;
 
-  return (
-    <div className="file-upload-area" id="fileArea">
-      <iframe 
-        id="fileViewer" 
-        className="document-viewer" 
-        src={documentUrl || undefined} // Usa la URL si existe
-        srcDoc={documentUrl ? undefined : initialMessage} // Muestra el mensaje si no hay URL
-        title={`Visor: ${documentTitle || 'No seleccionado'}`}
-      ></iframe>
-    </div>
-  );
-};
+    return (
+      <div className="visor-documento-container">
+        {documentTitle && (
+          <h3 className="visor-documento-titulo">{documentTitle}</h3>
+        )}
+
+        <div className="visor-documento-embed">
+          <object data={url} type="application/pdf" width="100%" height="500px">
+            <p>
+              No se pudo mostrar el PDF.{" "}
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                Abrir en otra pestaña
+              </a>
+            </p>
+          </object>
+        </div>
+      </div>
+    );
+  }
+}
 
 export default VisorDocumento;
