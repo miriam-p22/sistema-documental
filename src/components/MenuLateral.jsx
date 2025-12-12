@@ -1,160 +1,208 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "../styles/MenuLateral.css";
 
-// Importaciones de imágenes 
+// Imágenes
 import IconoLogo from "../assets/logo.png";
 import IconoUsuarios from "../assets/usuarios.png";
 import IconoDashboard from "../assets/dashboard.png";
 import IconoDocumentos from "../assets/documentos.png";
 import IconoOrganigrama from "../assets/organigrama.png";
-import IconoDispersion from "../assets/enviodocumentos.png"; 
+import IconoDispersion from "../assets/enviodocumentos.png";
 import IconoLeyArchivo from "../assets/leyarchivo.png";
 import IconoConfiguracion from "../assets/configuracion.png";
 import IconoCerrarSesion from "../assets/cerrarsesion.png";
 
 function Sidebar({ isOpen }) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // Estado para mostrar / ocultar el submenu de configuración
-const [configOpen, setConfigOpen] = useState(false);
+  // Leer el rol almacenado
+  const rol = localStorage.getItem("user_rol");
 
-// Si el sidebar se colapsa, cerrar submenu
-useEffect(() => {
-if (!isOpen) setConfigOpen(false);
-}, [isOpen]);
+  // Permisos por rol
+  const permisos = {
+    presidenta: ["dashboard", "logout"],
+    recursos_humanos: [
+      "usuarios",
+      "documentos",
+      "organigrama",
+      "config",
+      "logout"
+    ],
+    oficialia: ["dispersion", "logout"],
+     ley_archivo: ["leyarchivo", "logout"],
+  };
+
+  // Obtener accesos del usuario actual
+  const accesos = permisos[rol] || [];
+
+  // Submenú de Configuración
+  const [configOpen, setConfigOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) setConfigOpen(false);
+  }, [isOpen]);
+
+  /** -----------------------------------------------------------------
+   *  Función para desactivar opciones según permisos
+   *  ----------------------------------------------------------------- */
+  const estaDeshabilitado = (opcion) => !accesos.includes(opcion);
+
+  /** -----------------------------------------------------------------
+   *  Si está deshabilitado, evitamos navegación
+   *  ----------------------------------------------------------------- */
+  const manejarClick = (e, opcion, ruta) => {
+    if (estaDeshabilitado(opcion)) {
+      e.preventDefault();
+      alert("No tienes permisos para acceder a esta sección.");
+      return;
+    }
+    navigate(ruta);
+  };
 
   return (
     <nav className={`sidebar sidebar-off-canvas ${!isOpen ? "collapsed" : ""}`} id="sidebar">
       <ul className="nav">
 
+        {/* LOGO */}
         <li className="nav-item nav-category tlahuapan-item">
           <div className="tlahuapan-logo-text">
-            <img
-              // Ruta modificada
-              src={IconoLogo}
-              alt="Logo"
-              className="tlahuapan-logo"
-            />
+            <img src={IconoLogo} alt="Logo" className="tlahuapan-logo" />
             {isOpen && <span className="tlahuapan-text">TLAHUAPAN</span>}
           </div>
         </li>
 
-        <li className={`nav-item ${location.pathname === "/usuarios" ? "active" : ""}`}>
-          <Link className="nav-link" to="/usuarios">
+        {/* USUARIOS */}
+        <li
+          className={`nav-item ${location.pathname === "/usuarios" ? "active" : ""} 
+          ${estaDeshabilitado("usuarios") ? "disabled-menu" : ""}`}
+          onClick={(e) => manejarClick(e, "usuarios", "/usuarios")}
+        >
+          <span className="nav-link">
             <span className="icon-bg">
-              {/*  Ruta modificada */}
               <img src={IconoUsuarios} className="sidebar-icon-img" alt="Usuarios" />
             </span>
             {isOpen && <span className="menu-title">Usuarios</span>}
-          </Link>
+          </span>
         </li>
 
-        <li className={`nav-item ${location.pathname === "/dashboard" ? "active" : ""}`}>
-          <Link className="nav-link" to="/dashboard">
+        {/* DASHBOARD */}
+        <li
+          className={`nav-item ${location.pathname === "/dashboard" ? "active" : ""} 
+          ${estaDeshabilitado("dashboard") ? "disabled-menu" : ""}`}
+          onClick={(e) => manejarClick(e, "dashboard", "/dashboard")}
+        >
+          <span className="nav-link">
             <span className="icon-bg">
-              {/*  Ruta modificada */}
               <img src={IconoDashboard} className="sidebar-icon-img" alt="Dashboard" />
             </span>
             {isOpen && <span className="menu-title">Dashboard</span>}
-          </Link>
+          </span>
         </li>
 
-          <li className={`nav-item ${location.pathname === "/documentos" ? "active" : ""}`}>
-          <Link className="nav-link" to="/documentos">
+        {/* DOCUMENTOS */}
+        <li
+          className={`nav-item ${location.pathname === "/documentos" ? "active" : ""} 
+          ${estaDeshabilitado("documentos") ? "disabled-menu" : ""}`}
+          onClick={(e) => manejarClick(e, "documentos", "/documentos")}
+        >
+          <span className="nav-link">
             <span className="icon-bg">
-              {/*  Ruta modificada */}
               <img src={IconoDocumentos} className="sidebar-icon-img" alt="Documentos" />
             </span>
             {isOpen && <span className="menu-title">Documentos</span>}
-          </Link>
+          </span>
         </li>
 
-        <li className={`nav-item ${location.pathname === "/organigrama" ? "active" : ""}`}>
-          <Link className="nav-link" to="/organigrama">
+        {/* ORGANIGRAMA */}
+        <li
+          className={`nav-item ${location.pathname === "/organigrama" ? "active" : ""} 
+          ${estaDeshabilitado("organigrama") ? "disabled-menu" : ""}`}
+          onClick={(e) => manejarClick(e, "organigrama", "/organigrama")}
+        >
+          <span className="nav-link">
             <span className="icon-bg">
-              {/*  Ruta modificada */}
               <img src={IconoOrganigrama} className="sidebar-icon-img" alt="Organigrama" />
             </span>
             {isOpen && <span className="menu-title">Organigrama</span>}
-          </Link>
+          </span>
         </li>
 
-        <li className={`nav-item ${location.pathname === "/dispersion" ? "active" : ""}`}>
-          <Link className="nav-link" to="/dispersion">
+        {/* DISPERSIÓN */}
+        <li
+          className={`nav-item ${location.pathname === "/dispersion" ? "active" : ""} 
+          ${estaDeshabilitado("dispersion") ? "disabled-menu" : ""}`}
+          onClick={(e) => manejarClick(e, "dispersion", "/dispersion")}
+        >
+          <span className="nav-link">
             <span className="icon-bg">
-              {/*  Ruta modificada */}
               <img src={IconoDispersion} className="sidebar-icon-img" alt="Dispersión" />
             </span>
             {isOpen && <span className="menu-title">Dispersión</span>}
-          </Link>
+          </span>
         </li>
 
-        <li className={`nav-item ${location.pathname === "/leyarchivo" ? "active" : ""}`}>
-          <Link className="nav-link" to="/leyarchivo">
+        {/* LEY DE ARCHIVO */}
+        <li
+          className={`nav-item ${location.pathname === "/leyarchivo" ? "active" : ""} 
+          ${estaDeshabilitado("leyarchivo") ? "disabled-menu" : ""}`}
+          onClick={(e) => manejarClick(e, "leyarchivo", "/leyarchivo")}
+        >
+          <span className="nav-link">
             <span className="icon-bg">
-              {/*  Ruta modificada */}
               <img src={IconoLeyArchivo} className="sidebar-icon-img" alt="Ley de Archivo" />
             </span>
             {isOpen && <span className="menu-title">Ley de Archivo</span>}
-          </Link>
+          </span>
         </li>
 
-        {/* CONFIGURACIÓN CON SUBMENU */}
-<li className={`nav-item ${location.pathname.includes("/config") ? "active" : ""}`}>
-  <div 
-    className="nav-link submenu-toggle"
-    onClick={() => setConfigOpen(!configOpen)}
-    style={{ cursor: "pointer" }}
-  >
-    <span className="icon-bg">
-      <img src={IconoConfiguracion} className="sidebar-icon-img" alt="Configuración" />
-    </span>
+        {/* CONFIGURACIÓN */}
+        <li
+          className={`nav-item ${location.pathname.includes("/config") ? "active" : ""} 
+          ${estaDeshabilitado("config") ? "disabled-menu" : ""}`}
+          onClick={(e) => {
+            if (estaDeshabilitado("config")) {
+              e.preventDefault();
+              alert("No tienes permisos para acceder.");
+              return;
+            }
+            setConfigOpen(!configOpen);
+          }}
+        >
+          <div className="nav-link submenu-toggle">
+            <span className="icon-bg">
+              <img src={IconoConfiguracion} className="sidebar-icon-img" alt="Configuración" />
+            </span>
 
-    {isOpen && (
-      <>
-        <span className="menu-title">Configuración</span>
-        
-      </>
-    )}
-  </div>
+            {isOpen && <span className="menu-title">Configuración</span>}
+          </div>
 
- {/* SUBMENU */}
-{configOpen && isOpen && (
-  <ul className="submenu">
-    <li
-      className={`submenu-item ${
-        location.pathname === "/config/notificacion-conexion" ? "active" : ""
-      }`}
-    >
-      <Link className="nav-link" to="/config/notificacion-conexion">
-        Notificaciones y conexión a BD
-      </Link>
-    </li>
+          {/* Submenú */}
+          {configOpen && isOpen && (
+            <ul className="submenu">
+              <li className="submenu-item">
+                <Link to="/config/notificacion-conexion">Notificaciones y conexión a BD</Link>
+              </li>
+              <li className="submenu-item">
+                <Link to="/config/direcciones-ip">Direcciones IP</Link>
+              </li>
+            </ul>
+          )}
+        </li>
 
-    <li
-      className={`submenu-item ${
-        location.pathname === "/config/direcciones-ip" ? "active" : ""
-      }`}
-    >
-      <Link className="nav-link" to="/config/direcciones-ip">
-        Direcciones IP
-      </Link>
-    </li>
-  </ul>
-)}
-</li>
-
-
-        <li className={`nav-item ${location.pathname === "/login" ? "active" : ""}`}>
-          <Link className="nav-link" to="/login">
+        {/* CERRAR SESIÓN */}
+        <li
+          className={`nav-item ${estaDeshabilitado("logout") ? "disabled-menu" : ""}`}
+          onClick={(e) => manejarClick(e, "logout", "/login")}
+        >
+          <span className="nav-link">
             <span className="icon-bg">
               <img src={IconoCerrarSesion} className="sidebar-icon-img" alt="Cerrar Sesión" />
             </span>
             {isOpen && <span className="menu-title">Cerrar Sesión</span>}
-          </Link>
+          </span>
         </li>
-
       </ul>
     </nav>
   );

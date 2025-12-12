@@ -218,8 +218,13 @@ a {
 .submenu::-webkit-scrollbar {
   display: none;
 }
+/*ESTILO cuando se desactivan las opciones que no le corresponden al usuario*/
+.disabled-menu {
+  opacity: 0.4;
+  pointer-events: none; /* No permite clic */
+}
 
-
+/*submenu*/
 .sidebar .submenu-item .nav-link {
   font-size: 16px;
   color: #444;

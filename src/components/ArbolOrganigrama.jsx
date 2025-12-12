@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tree, TreeNode } from "react-organizational-chart";
+//import { Tree, TreeNode } from "react-organizational-chart";
 import "../styles/ArbolOrganigrama.css";
 class ArbolOrganigrama extends Component {
   buildTree(areas) {

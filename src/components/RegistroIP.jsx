@@ -8,6 +8,15 @@ const RegistroIP = ({ isOpen, onClose, onRegister }) => {
     ip: "",
   });
 
+  const adscripciones = [
+    "Sistemas",
+    "Recursos Humanos",
+    "Presidencia",
+    "Contraloría",
+    "Ley de Archivo",
+    "Obras Públicas"
+  ];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -42,14 +51,23 @@ const RegistroIP = ({ isOpen, onClose, onRegister }) => {
       acceptButtonText="Guardar"
       cancelButtonText="Cancelar"
     >
+      
+      {/* Campo (deplegable) Adscripción  */}
       <CampoFormulario
         label="Adscripción"
-        placeholder="Ej: Sistemas"
+        isSelect
         name="adscripcion"
-        value={formData.adscripcion}
+        value={formData.adscripcion || ""}
         onChange={handleInputChange}
         required
-      />
+      >
+        <option value="" disabled>Adscripción</option>
+        {adscripciones.map((adsc) => (
+          <option key={adsc} value={adsc}>
+            {adsc}
+          </option>
+        ))}
+      </CampoFormulario>
 
       <CampoFormulario
         label="Dirección IP"

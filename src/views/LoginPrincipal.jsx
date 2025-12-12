@@ -21,13 +21,16 @@ const LoginPrincipal = () => {
 
   const navigate = useNavigate();
 
+  // Usuarios con rol asociado
   const usuariosSimulados = [
-    { usuario: "admin", password: "123", ruta: "/usuarios" },
-    { usuario: "user", password: "123", ruta: "/dashboard" },
+    { usuario: "presidenta", password: "123", ruta: "/dashboard", rol: "presidenta" },
+    { usuario: "admin", password: "123", ruta: "/usuarios", rol: "recursos_humanos" },
+    { usuario: "oficialia", password: "123", ruta: "/dispersion", rol: "oficialia" },
   ];
 
   const onLogin = (e) => {
     e.preventDefault();
+
     if (!usuario || !password) {
       alert("Completa los campos");
       return;
@@ -42,6 +45,10 @@ const LoginPrincipal = () => {
       return;
     }
 
+    // 🔹 Guardar el rol
+    localStorage.setItem("user_rol", encontrado.rol);
+
+    // Ir a su ruta
     navigate(encontrado.ruta);
   };
 
