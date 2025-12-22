@@ -36,7 +36,6 @@ const organigramasMock = [
 ];
 
 const areasMock = [
-  // Simulacion de datos para mostrar organigrama
   { area: "Presidencia Municipal", nivel: 1, superior: "-" },
   {
     area: "Dirección de Obras Públicas",
@@ -58,7 +57,6 @@ const areasMock = [
     nivel: 2,
     superior: "Presidencia Municipal",
   },
-
   {
     area: "Coordinación de Programas Sociales",
     nivel: 3,
@@ -82,6 +80,7 @@ class Organigrama extends Component {
       searchQuery: "",
       selectedOrg: null,
 
+      // Control de "pantallas"
       mostrarGestion: false,
 
       // Modales
@@ -90,7 +89,11 @@ class Organigrama extends Component {
       isModalInsertarAreaOpen: false,
       isModalAutorizarOpen: false,
 
-      // Formularios
+      // NUEVO: modal editar área
+      isModalEditarAreaOpen: false,
+      areaEditando: null, // { ...area, index }
+
+      // Formularios (se reutilizan en agregar/editar)
       nuevoTitulo: "",
       nuevaArea: "",
       nuevoNivel: "",
@@ -99,7 +102,10 @@ class Organigrama extends Component {
 
     this.renderOrganigramaRow = this.renderOrganigramaRow.bind(this);
     this.renderAreaRow = this.renderAreaRow.bind(this);
-    this.gestionOrganizacionalRef = React.createRef();
+    this.regresarAOrganigrama = this.regresarAOrganigrama.bind(this);
+
+    this.abrirEditarArea = this.abrirEditarArea.bind(this);
+    this.guardarEdicionArea = this.guardarEdicionArea.bind(this);
   }
 
   setSearchQuery(value) {
@@ -108,13 +114,12 @@ class Organigrama extends Component {
 
   getFilteredOrganigramas() {
     const { organigramas, searchQuery } = this.state;
-
     return organigramas.filter((o) =>
       o.titulo.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }
 
-  //Acciones
+  // ---------------- ACCIONES ----------------
   abrirCrear() {
     this.setState({ nuevoTitulo: "", isModalCrearOpen: true });
   }
@@ -136,14 +141,45 @@ class Organigrama extends Component {
     });
   }
 
-  irAGestion(org) {
-    this.setState({ selectedOrg: org }, () => {
-      if (this.gestionOrganizacionalRef.current) {
-        this.gestionOrganizacionalRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
+  // NUEVO: abrir modal de edición de área
+  abrirEditarArea(area, index) {
+    this.setState({
+      areaEditando: { ...area, index },
+      nuevaArea: area.area,
+      nuevoNivel: area.nivel,
+      nuevaSuperior: area.superior,
+      isModalEditarAreaOpen: true,
+    });
+  }
+
+  // NUEVO: guardar cambios de edición
+  guardarEdicionArea() {
+    const { areaEditando, gestionAreas, nuevaArea, nuevoNivel, nuevaSuperior } =
+      this.state;
+
+    if (!areaEditando) return;
+
+    const nuevasAreas = [...gestionAreas];
+    nuevasAreas[areaEditando.index] = {
+      area: nuevaArea,
+      nivel: nuevoNivel,
+      superior: nuevaSuperior,
+    };
+
+    this.setState({
+      gestionAreas: nuevasAreas,
+      isModalEditarAreaOpen: false,
+      areaEditando: null,
+      nuevaArea: "",
+      nuevoNivel: "",
+      nuevaSuperior: "",
+    });
+  }
+
+  regresarAOrganigrama() {
+    this.setState({
+      mostrarGestion: false,
+      selectedOrg: null,
     });
   }
 
@@ -175,9 +211,13 @@ class Organigrama extends Component {
     this.setState((prev) => ({
       gestionAreas: [...prev.gestionAreas, nueva],
       isModalInsertarAreaOpen: false,
+      nuevaArea: "",
+      nuevoNivel: "",
+      nuevaSuperior: "",
     }));
   }
 
+  // ---------------- RENDER ROWS ----------------
   renderOrganigramaRow(org) {
     const autorizado =
       org.fechaAutorizacion && org.fechaAutorizacion !== "Pendiente";
@@ -200,6 +240,7 @@ class Organigrama extends Component {
                 Editar
               </BotonReutilizable>
             )}
+
             {autorizado && (
               <BotonReutilizable
                 className="btn-action status-active"
@@ -214,54 +255,75 @@ class Organigrama extends Component {
     );
   }
 
-  // Tabla gestion areas
+  // Tabla gestión áreas
   renderAreaRow(area, index) {
     return (
       <tr key={index}>
         <td>{area.area}</td>
         <td>{area.nivel}</td>
         <td>{area.superior}</td>
+        <td>
+          <BotonReutilizable
+            className="btn-action edit"
+            onClick={() => this.abrirEditarArea(area, index)}
+          >
+            Editar
+          </BotonReutilizable>
+        </td>
       </tr>
     );
   }
 
   render() {
-    const { selectedOrg } = this.state;
-
     return (
       <main className="content-area">
         <section className="content-section">
-          <h2 className="card-title">Organigrama</h2>
-
-          {/* BOTÓN CREAR */}
-          <div className="management-buttons-container">
-            <BotonReutilizable onClick={() => this.abrirCrear()}>
-              Crear Organigrama
-            </BotonReutilizable>
-          </div>
-
-          {/* TABLA ORGANIGRAMAS */}
-          <Card>
-            <TablaReutilizable
-              columns={[
-                "Título del Organigrama",
-                "Fecha de solicitud",
-                "Fecha de autorización",
-                "Acciones",
-              ]}
-              data={this.getFilteredOrganigramas()}
-              renderRow={(item) => this.renderOrganigramaRow(item)}
-            />
-          </Card>
-
-          {/* Gestion organizacional */}
-          {this.state.mostrarGestion && (
+          {/* ------------------ PANTALLA 1: ORGANIGRAMA ------------------ */}
+          {!this.state.mostrarGestion && (
             <>
-              <h2 className="card-title" ref={this.gestionOrganizacionalRef}>
-                Gestión organizacional
-              </h2>
+              <h2 className="card-title">Organigrama</h2>
+
+              {/* Si quieres usar filtro, descomenta esto */}
+              {/* <FiltroBusqueda
+                placeholder="Buscar organigrama..."
+                value={this.state.searchQuery}
+                onChange={(e) => this.setSearchQuery(e.target.value)}
+              /> */}
 
               <div className="management-buttons-container">
+                <BotonReutilizable onClick={() => this.abrirCrear()}>
+                  Crear Organigrama
+                </BotonReutilizable>
+              </div>
+
+              <Card>
+                <TablaReutilizable
+                  columns={[
+                    "Título del Organigrama",
+                    "Fecha de solicitud",
+                    "Fecha de autorización",
+                    "Acciones",
+                  ]}
+                  data={this.getFilteredOrganigramas()}
+                  renderRow={(item) => this.renderOrganigramaRow(item)}
+                />
+              </Card>
+            </>
+          )}
+
+          {/* ------------------ PANTALLA 2: GESTIÓN ORGANIZACIONAL ------------------ */}
+          {this.state.mostrarGestion && (
+            <>
+              <h2 className="card-title">Gestión organizacional</h2>
+
+              <div className="management-buttons-container">
+                <BotonReutilizable
+                  className="btn-secondary"
+                  onClick={this.regresarAOrganigrama}
+                >
+                  Regresar
+                </BotonReutilizable>
+
                 <BotonReutilizable onClick={() => this.abrirInsertarArea()}>
                   Agregar áreas
                 </BotonReutilizable>
@@ -276,7 +338,7 @@ class Organigrama extends Component {
 
               <Card>
                 <TablaReutilizable
-                  columns={["Área", "Nivel", "Área superior"]}
+                  columns={["Área", "Nivel", "Área superior", "Acciones"]}
                   data={this.state.gestionAreas}
                   renderRow={(item, index) => this.renderAreaRow(item, index)}
                 />
@@ -285,7 +347,9 @@ class Organigrama extends Component {
           )}
         </section>
 
-        {/* Modal crear nueva version  */}
+        {/* ------------------ MODALES ------------------ */}
+
+        {/* Modal crear nueva versión */}
         <ModalReutilizable
           title="Nueva versión de organigrama"
           isOpen={this.state.isModalCrearOpen}
@@ -301,7 +365,7 @@ class Organigrama extends Component {
           />
         </ModalReutilizable>
 
-        {/* Modal ver organigrama autorizado*/}
+        {/* Modal ver organigrama autorizado */}
         <ModalReutilizable
           title="Organigrama autorizado"
           isOpen={this.state.isModalVerOpen}
@@ -317,7 +381,7 @@ class Organigrama extends Component {
           </div>
         </ModalReutilizable>
 
-        {/* Modal solicitar autorizacion */}
+        {/* Modal solicitar autorización */}
         <ModalReutilizable
           title="Autorizar organigrama"
           isOpen={this.state.isModalAutorizarOpen}
@@ -328,7 +392,7 @@ class Organigrama extends Component {
           <p>¿Desea solicitar la autorización del organigrama actual?</p>
         </ModalReutilizable>
 
-        {/* Modal agregar areas */}
+        {/* Modal agregar áreas */}
         <ModalReutilizable
           title="Agregar área"
           isOpen={this.state.isModalInsertarAreaOpen}
@@ -351,11 +415,58 @@ class Organigrama extends Component {
           />
 
           <CampoFormulario
-            label="Área superior"
+            label="Selecciona el área superior"
+            isSelect
             value={this.state.nuevaSuperior}
             onChange={(e) => this.setState({ nuevaSuperior: e.target.value })}
-            placeholder="Presidencia Municipal"
+          >
+            <option value="">-- Selecciona una opción --</option>
+            {this.state.gestionAreas.map((a, i) => (
+              <option key={i} value={a.area}>
+                {a.area}
+              </option>
+            ))}
+          </CampoFormulario>
+        </ModalReutilizable>
+
+        {/* Modal editar área */}
+        <ModalReutilizable
+          title="Editar área"
+          isOpen={this.state.isModalEditarAreaOpen}
+          onClose={() => this.setState({ isModalEditarAreaOpen: false })}
+          onAccept={() => this.guardarEdicionArea()}
+          acceptButtonText="Guardar cambios"
+        >
+          <CampoFormulario
+            label="Nombre del área"
+            value={this.state.nuevaArea}
+            onChange={(e) => this.setState({ nuevaArea: e.target.value })}
+            placeholder="Dirección de..."
           />
+
+          <CampoFormulario
+            label="Nivel"
+            type="number"
+            value={this.state.nuevoNivel}
+            onChange={(e) => this.setState({ nuevoNivel: e.target.value })}
+          />
+
+          <CampoFormulario
+            label="Área superior"
+            isSelect
+            value={this.state.nuevaSuperior}
+            onChange={(e) => this.setState({ nuevaSuperior: e.target.value })}
+          >
+            <option value="">-- Selecciona una opción --</option>
+            {/* Puedes permitir "-" si quieres que existan áreas raíz */}
+            <option value="-">-</option>
+
+            {this.state.gestionAreas.map((a, i) => (
+              <option key={i} value={a.area}>
+                {a.area}
+              </option>
+            ))}
+          </CampoFormulario>
         </ModalReutilizable>
       </main>
     );

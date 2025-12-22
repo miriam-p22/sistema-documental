@@ -34,10 +34,7 @@ class ArbolOrganigrama extends Component {
     const children = childrenMap.get(name) || [];
 
     return (
-      <TreeNode
-        key={name}
-        label={<div className="org-node">{name}</div>}
-      >
+      <TreeNode key={name} label={<div className="org-node">{name}</div>}>
         {children.map((child) => this.renderNode(child, childrenMap))}
       </TreeNode>
     );
@@ -57,13 +54,11 @@ class ArbolOrganigrama extends Component {
             lineWidth={"2px"}
             lineColor={"#0d6efd"}
             lineBorderRadius={"10px"}
-            label={
-              <div className="org-node org-node-root">
-                {root}
-              </div>
-            }
+            label={<div className="org-node org-node-root">{root}</div>}
           >
-            {this.renderNode(root, childrenMap)}
+            {(childrenMap.get(root) || []).map((child) =>
+              this.renderNode(child, childrenMap)
+            )}
           </Tree>
         ))}
       </div>
